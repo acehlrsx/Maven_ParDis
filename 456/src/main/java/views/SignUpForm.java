@@ -1,5 +1,6 @@
 package views;
 
+import design.RoundedBorder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
