@@ -8,6 +8,7 @@ import java.awt.event.*;
 public class CreateItinerary extends JFrame {
 
     private JPanel contentPanel;
+    private String username = "";
     private int dayCount = 1;
     private JPanel sidebar;
     private JButton addDayButton;
@@ -99,9 +100,31 @@ public class CreateItinerary extends JFrame {
 
         // Create buttons for the sidebar
         JButton homepageButton = createSidebarButton("HOMEPAGE");
+        homepageButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the Create Itinerary window
+                new Homepage(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
+        createItineraryButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the Create Itinerary window
+                new CreateItinerary().setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton historyButton = createSidebarButton("HISTORY");
+        historyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the Create Itinerary window
+                new History(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton logoutButton = createSidebarButton("LOGOUT");
+        logoutButton.addActionListener(e -> logout());
 
         // Add components to the sidebar
         sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
@@ -316,6 +339,14 @@ public class CreateItinerary extends JFrame {
         });
 
         return button;
+    }
+
+    private void logout() {
+        JOptionPane.showMessageDialog(this, "Logged out", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        SwingUtilities.invokeLater(() -> {
+            new LoginForm().setVisible(true); 
+            dispose();
+        });
     }
 
     // Custom Border for shadow effect

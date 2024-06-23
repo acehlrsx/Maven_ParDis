@@ -63,6 +63,13 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
 
         // Create buttons for the sidebar
         JButton homepageButton = createSidebarButton("HOMEPAGE");
+        homepageButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the Create Itinerary window
+                new Homepage(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
         createItineraryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +79,13 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
             }
         });
         JButton historyButton = createSidebarButton("HISTORY");
+        historyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the History window
+                new History(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton logoutButton = createSidebarButton("LOGOUT");
         logoutButton.addActionListener(e -> logout());
 
@@ -181,7 +195,7 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
     }
 
     private void logout() {
-        JOptionPane.showMessageDialog(this, "Logout successful", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Logged out", "Notification", JOptionPane.INFORMATION_MESSAGE);
         SwingUtilities.invokeLater(() -> {
             new LoginForm().setVisible(true); 
             dispose();

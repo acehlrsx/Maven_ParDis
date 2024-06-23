@@ -63,6 +63,13 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
 
         // Create buttons for the sidebar
         JButton homepageButton = createSidebarButton("HOMEPAGE");
+        homepageButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the Create Itinerary window
+                new Homepage(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
         createItineraryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +79,13 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
             }
         });
         JButton historyButton = createSidebarButton("HISTORY");
+        historyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Open the History window
+                new History(username).setVisible(true);
+                dispose(); // Close the current window
+            }
+        });
         JButton logoutButton = createSidebarButton("LOGOUT");
         logoutButton.addActionListener(e -> logout());
 
@@ -181,7 +195,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
     }
 
     private void logout() {
-        JOptionPane.showMessageDialog(this, "Logout successful", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Logged out", "Notification", JOptionPane.INFORMATION_MESSAGE);
         SwingUtilities.invokeLater(() -> {
             new LoginForm().setVisible(true); 
             dispose();
@@ -225,7 +239,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
 
     public static void main(String[] args) {
         // For demonstration, replace this with the actual username obtained from login
-        String username = "John Doe";
+        String username = "";
         SwingUtilities.invokeLater(() -> {
             new Homepage(username).setVisible(true);
         });
