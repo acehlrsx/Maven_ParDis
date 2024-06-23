@@ -297,10 +297,10 @@ public class CreateItinerary extends JFrame {
     private JButton createSidebarButton(String text) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        button.setMaximumSize(new Dimension(214, 40));
         button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, normalFontSize)); // Use updated normal font size
+        button.setFont(new Font("Arial", Font.BOLD, 18)); // Use updated normal font size
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
