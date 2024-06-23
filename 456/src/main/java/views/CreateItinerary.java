@@ -204,19 +204,19 @@ public class CreateItinerary extends JFrame {
         // ETD label and text box
         JLabel etdLabel = new JLabel("ETD");
         fixedFormPanel.add(etdLabel);
-        JTextField etdField = new JTextField("TEXT BOX");
+        JTextField etdField = new JTextField("");
         fixedFormPanel.add(etdField);
 
         // Destination label and text box
         JLabel destinationLabel = new JLabel("Destination");
         fixedFormPanel.add(destinationLabel);
-        JTextField destinationField = new JTextField("DESTINATION");
+        JTextField destinationField = new JTextField("");
         fixedFormPanel.add(destinationField);
 
         // ETA label and text box
         JLabel etaLabel = new JLabel("ETA");
         fixedFormPanel.add(etaLabel);
-        JTextField etaField = new JTextField("TEXT BOX");
+        JTextField etaField = new JTextField("");
         fixedFormPanel.add(etaField);
 
         // Set fixed size for text fields
@@ -298,12 +298,23 @@ public class CreateItinerary extends JFrame {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        button.setBackground(new Color(252, 171, 78));
+        button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);
         button.setFont(new Font("Arial", Font.BOLD, normalFontSize)); // Use updated normal font size
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(Color.LIGHT_GRAY); // Change to desired hover color
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(Color.WHITE); // Revert to original color
+            }
+        });
+
         return button;
     }
 
