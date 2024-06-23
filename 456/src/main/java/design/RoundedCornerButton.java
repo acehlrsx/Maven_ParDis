@@ -14,12 +14,12 @@ public class RoundedCornerButton extends JButton {
         setContentAreaFilled(false); // Ensure the content area is not filled by the default mechanism
         setOpaque(false); // Ensure the component is opaque
         setFocusPainted(false); // Disable painting of focus indication
-        setBackground(new Color(252, 171, 78)); // Set the default background color
+        setBackground(new Color(224, 31, 147)); // Set the default background color
         setForeground(Color.BLACK); // Set the default foreground color (text color)
         setFont(new Font("Arial", Font.BOLD, 15)); // Set the default font
 
-        this.backgroundColor = new Color(252, 171, 78);
-        this.hoverBackgroundColor = new Color(224, 31, 147);
+        this.backgroundColor = new Color(224, 31, 147);
+        this.hoverBackgroundColor = new Color(235, 117, 188);
         this.pressedBackgroundColor = new Color(192, 17, 104);
 
         initMouseListener();
