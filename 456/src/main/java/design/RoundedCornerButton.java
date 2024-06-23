@@ -1,6 +1,7 @@
 package design;
 
 import javax.swing.*;
+import design.RoundedCornerButton;
 import java.awt.*;
 
 public class RoundedCornerButton extends JButton {

@@ -126,12 +126,23 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        button.setBackground(new Color(252, 171, 78));
+        button.setBackground(Color.WHITE);
         button.setForeground(Color.BLACK);
         button.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(Color.LIGHT_GRAY); // Change to desired hover color
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(Color.WHITE); // Revert to original color
+            }
+        });
+
         return button;
     }
 
