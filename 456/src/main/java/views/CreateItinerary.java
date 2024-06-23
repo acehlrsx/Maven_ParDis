@@ -1,10 +1,9 @@
 package views;
-
+import design.RoundedCornerButton;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.*;
-
 
 public class CreateItinerary extends JFrame {
 
@@ -14,10 +13,16 @@ public class CreateItinerary extends JFrame {
     private JButton addDayButton;
     private JButton createItineraryButton;
 
+    // Updated dimensions and font sizes
+    private final int width = 1280; // Updated width
+    private final int height = 720; // Updated height
+    private final int titleFontSize = 50; // Updated title font size
+    private final int normalFontSize = 20; // Updated normal font size
+
     public CreateItinerary() {
         // Set frame properties
         setTitle("Create Itinerary");
-        setSize(900, 500);
+        setSize(width, height); // Use updated width and height
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true); // Turn off the window navigation
@@ -63,7 +68,7 @@ public class CreateItinerary extends JFrame {
         closeButton.setBackground(new Color(224, 31, 147));
         closeButton.setFocusPainted(false);
         closeButton.setBorderPainted(false);
-        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.setFont(new Font("Arial", Font.BOLD, normalFontSize)); // Use updated normal font size
         closeButton.addActionListener(e -> System.exit(0)); // Close application on click
 
         // Add close button to top bar
@@ -75,7 +80,7 @@ public class CreateItinerary extends JFrame {
         toggleSidebarButton.setBackground(new Color(224, 31, 147));
         toggleSidebarButton.setFocusPainted(false);
         toggleSidebarButton.setBorderPainted(false);
-        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, 16));
+        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, 18)); // Use updated normal font size
         toggleSidebarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,12 +132,7 @@ public class CreateItinerary extends JFrame {
         addDayPanel();
 
         // Button to add more days
-        addDayButton = new JButton("Button to add more day/s");
-        addDayButton.setBackground(new Color(252, 171, 78));
-        addDayButton.setForeground(Color.BLACK);
-        addDayButton.setFont(new Font("Arial", Font.BOLD, 14));
-        addDayButton.setFocusPainted(false);
-        addDayButton.setBorderPainted(false);
+        addDayButton = new RoundedCornerButton("Add more day/s");
         addDayButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addDayButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addDayButton.addActionListener(new ActionListener() {
@@ -142,17 +142,11 @@ public class CreateItinerary extends JFrame {
             }
         });
 
-        // Add button panel for day and itinerary buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.add(addDayButton);
-
         // Button to create itinerary
-        createItineraryButton = new JButton("Create Itinerary");
+        createItineraryButton = new RoundedCornerButton("Create Itinerary");
         createItineraryButton.setBackground(new Color(252, 171, 78));
         createItineraryButton.setForeground(Color.BLACK);
-        createItineraryButton.setFont(new Font("Arial", Font.BOLD, 14));
+        createItineraryButton.setFont(new Font("Arial", Font.BOLD, 15)); // Use updated normal font size
         createItineraryButton.setFocusPainted(false);
         createItineraryButton.setBorderPainted(false);
         createItineraryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -165,12 +159,16 @@ public class CreateItinerary extends JFrame {
 
                 // Navigate back to homepage
                 dispose();
-                // Here you can add code to open the homepage frame if you have one.
-                // new HomePage().setVisible(true);
             }
         });
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer
+
+        // Add button panel for day and itinerary buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(addDayButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(20, 0))); // Add space between buttons
         buttonPanel.add(createItineraryButton);
+
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -200,7 +198,7 @@ public class CreateItinerary extends JFrame {
         // Starting location label and text box
         JLabel startingLocationLabel = new JLabel("Starting Location");
         fixedFormPanel.add(startingLocationLabel);
-        JTextField startingLocationField = new JTextField("TEXT BOX");
+        JTextField startingLocationField = new JTextField("");
         fixedFormPanel.add(startingLocationField);
 
         // ETD label and text box
@@ -251,12 +249,7 @@ public class CreateItinerary extends JFrame {
         addPlacePanel(placesContainer, 1);
 
         // Button to add more places
-        JButton addPlaceButton = new JButton("Add Place");
-        addPlaceButton.setBackground(new Color(252, 171, 78));
-        addPlaceButton.setForeground(Color.BLACK);
-        addPlaceButton.setFont(new Font("Arial", Font.BOLD, 14));
-        addPlaceButton.setFocusPainted(false);
-        addPlaceButton.setBorderPainted(false);
+        JButton addPlaceButton = new RoundedCornerButton("Add Place");
         addPlaceButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addPlaceButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addPlaceButton.addActionListener(new ActionListener() {
@@ -284,11 +277,11 @@ public class CreateItinerary extends JFrame {
         placePanel.setBorder(BorderFactory.createTitledBorder("Place " + placeNumber));
 
         // Date text box
-        JTextField dateField = new JTextField("Text box for date");
+        JTextField dateField = new JTextField("");
         placePanel.add(dateField);
 
         // Destination name text box
-        JTextField destinationField = new JTextField("Name for destination");
+        JTextField destinationField = new JTextField("");
         placePanel.add(destinationField);
 
         // Set fixed size for text fields
@@ -307,7 +300,7 @@ public class CreateItinerary extends JFrame {
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         button.setBackground(new Color(252, 171, 78));
         button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Arial", Font.BOLD, normalFontSize)); // Use updated normal font size
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));

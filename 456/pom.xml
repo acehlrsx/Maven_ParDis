@@ -86,7 +86,6 @@
           <configuration>
               <mainClass>src.main.java.views</mainClass>  </configuration>
           </plugin>
-
       </plugins>
     </pluginManagement>
   </build>

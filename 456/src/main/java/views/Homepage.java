@@ -11,10 +11,16 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
     private JLabel greetingLabel;
     private int mouseX, mouseY;
 
+    // Constants for dimensions and font sizes
+    private final int width = 1280;
+    private final int height = 720;
+    private final int titleFontSize = 50;
+    private final int normalFontSize = 20;
+
     public Homepage(String username) {
         // Set frame properties
         setTitle("Homepage");
-        setSize(900, 500);
+        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true); // Turn off the window navigation
@@ -37,7 +43,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
         closeButton.setBackground(new Color(224, 31, 147));
         closeButton.setFocusPainted(false);
         closeButton.setBorderPainted(false);
-        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.setFont(new Font("Arial", Font.BOLD, 18));
         closeButton.addActionListener(e -> System.exit(0)); // Close application on click
 
         // Add close button to top bar
@@ -51,7 +57,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
 
         // Create greeting label
         greetingLabel = new JLabel("Hi Traveler! " + username, SwingConstants.CENTER);
-        greetingLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        greetingLabel.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         greetingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         greetingLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -109,7 +115,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
         toggleSidebarButton.setBackground(new Color(224, 31, 147));
         toggleSidebarButton.setFocusPainted(false);
         toggleSidebarButton.setBorderPainted(false);
-        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, 16));
+        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         toggleSidebarButton.addActionListener(e -> toggleSidebar());
 
         // Add toggle button to top bar
@@ -122,7 +128,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         button.setBackground(new Color(252, 171, 78));
         button.setForeground(Color.BLACK);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -139,7 +145,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         panel.setLayout(new BorderLayout());
         JLabel label = new JLabel(planName, SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        label.setFont(new Font("Arial", Font.PLAIN, normalFontSize));
         panel.add(label, BorderLayout.CENTER);
 
         panel.addMouseListener(new MouseAdapter() {

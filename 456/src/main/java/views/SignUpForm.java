@@ -1,6 +1,5 @@
 package views;
 
-import design.RoundedBorder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,11 +7,12 @@ import java.awt.event.*;
 public class SignUpForm extends JFrame implements MouseListener, MouseMotionListener {
 
     private int mouseX, mouseY;
+    private int height = 720, width = 1280, normal_font = 20, title_font = 50;
 
     public SignUpForm() {
         // Set frame properties
         setTitle("Sign Up");
-        setSize(900, 500);
+        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
@@ -42,25 +42,33 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
         // Create panels for left and right sides
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(Color.WHITE);
-        leftPanel.setPreferredSize(new Dimension(450, 500)); // Adjusted width
-        ImageIcon imageIcon = new ImageIcon("images\\journifylogo.png"); // Placeholder image path
-        Image scaledImage = imageIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+        leftPanel.setPreferredSize(new Dimension(width/2, height)); 
+        ImageIcon imageIcon = new ImageIcon("456/resources/images/journifylogo.png");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         JLabel imgLabel = new JLabel(scaledIcon);
         leftPanel.setLayout(new BorderLayout());
         leftPanel.add(imgLabel, BorderLayout.CENTER);
 
-        // Create right panel
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBackground(Color.WHITE);
-        rightPanel.setPreferredSize(new Dimension(600, 500)); // Adjusted width
+        rightPanel.setPreferredSize(new Dimension(width / 2, height)); // Set preferred size
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Define common fonts
+        Font titleFont = new Font("Segoe UI", Font.BOLD, title_font);
+        Font normalFont = new Font("Segoe UI", Font.PLAIN, normal_font);
+        Font textFieldFont = new Font("Segoe UI", Font.PLAIN, 20); // Define font for text fields
+
+        // Define common dimension for text fields
+        Dimension textFieldSize = new Dimension(300, 30);
+
         // Components for right panel
         JLabel signUpLabel = new JLabel("Sign Up");
-        signUpLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        signUpLabel.setFont(titleFont);
         signUpLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -68,57 +76,67 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
         rightPanel.add(signUpLabel, gbc);
 
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        usernameLabel.setFont(normalFont);
         usernameLabel.setForeground(Color.BLACK);
         gbc.gridy++;
         gbc.gridwidth = 1;
         rightPanel.add(usernameLabel, gbc);
 
-        JTextField usernameField = new JTextField(20);
+        JTextField usernameField = new JTextField();
+        usernameField.setPreferredSize(textFieldSize);
+        usernameField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(usernameField, gbc);
 
         JLabel emailLabel = new JLabel("Email");
-        emailLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        emailLabel.setFont(normalFont);
         emailLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy++;
         rightPanel.add(emailLabel, gbc);
 
         JTextField emailField = new JTextField(20);
+        emailField.setPreferredSize(textFieldSize);
+        emailField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(emailField, gbc);
 
         JLabel nameLabel = new JLabel("Name");
-        nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        nameLabel.setFont(normalFont);
         nameLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy++;
         rightPanel.add(nameLabel, gbc);
 
         JTextField nameField = new JTextField(20);
+        nameField.setPreferredSize(textFieldSize);
+        nameField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(nameField, gbc);
 
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        passwordLabel.setFont(normalFont);
         passwordLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy++;
         rightPanel.add(passwordLabel, gbc);
 
         JPasswordField passwordField = new JPasswordField(20);
+        passwordField.setPreferredSize(textFieldSize);
+        passwordField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(passwordField, gbc);
 
         JLabel reenterPasswordLabel = new JLabel("Re-enter Password");
-        reenterPasswordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        reenterPasswordLabel.setFont(normalFont);
         reenterPasswordLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy++;
         rightPanel.add(reenterPasswordLabel, gbc);
 
         JPasswordField reenterPasswordField = new JPasswordField(20);
+        reenterPasswordField.setPreferredSize(textFieldSize);
+        reenterPasswordField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(reenterPasswordField, gbc);
 
@@ -135,11 +153,11 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
         showPasswordCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    passwordField.setEchoChar((char) 0); // Show the password
-                    reenterPasswordField.setEchoChar((char) 0); // Show the password
+                    passwordField.setEchoChar((char) 0);
+                    reenterPasswordField.setEchoChar((char) 0);
                 } else {
-                    passwordField.setEchoChar('*'); // Hide the password
-                    reenterPasswordField.setEchoChar('*'); // Hide the password
+                    passwordField.setEchoChar('*');
+                    reenterPasswordField.setEchoChar('*');
                 }
             }
         });

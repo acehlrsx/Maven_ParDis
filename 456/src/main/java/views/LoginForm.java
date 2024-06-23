@@ -9,14 +9,20 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
     private int mouseX, mouseY;
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private int height = 720, width = 1280, normal_font = 20, title_font = 50;
 
     public LoginForm() {
         // Set frame properties
         setTitle("Login");
-        setSize(900, 500);
+        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
+
+        Font titleFont = new Font("Segoe UI", Font.BOLD, title_font);
+        Font normalFont = new Font("Segoe UI", Font.PLAIN, normal_font);
+        Font textFieldFont = new Font("Segoe UI", Font.PLAIN, 20);
+        Dimension textFieldSize = new Dimension(300, 30);
 
         // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -47,9 +53,9 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         // Create panels for left and right sides
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(Color.WHITE);
-        leftPanel.setPreferredSize(new Dimension(450, 500)); // Adjusted width
-        ImageIcon imageIcon = new ImageIcon("images\\journifylogo.png");
-        Image scaledImage = imageIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+        leftPanel.setPreferredSize(new Dimension(width/2, height));
+        ImageIcon imageIcon = new ImageIcon("456/resources/images/journifylogo.png");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         JLabel imgLabel = new JLabel(scaledIcon);
         leftPanel.setLayout(new BorderLayout());
@@ -58,14 +64,14 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         // Create right panel
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBackground(Color.WHITE);
-        rightPanel.setPreferredSize(new Dimension(600, 500)); // Adjusted width
+        rightPanel.setPreferredSize(new Dimension(width/2, height));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Components for right panel
         JLabel loginLabel = new JLabel("Login");
-        loginLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        loginLabel.setFont(new Font("Segoe UI", Font.BOLD, title_font));
         loginLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -73,30 +79,34 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         rightPanel.add(loginLabel, gbc);
 
         JLabel welcomeLabel = new JLabel("Hello! Let's get started");
-        welcomeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        welcomeLabel.setFont(new Font("Segoe UI", Font.PLAIN, normal_font));
         welcomeLabel.setForeground(Color.BLACK);
         gbc.gridy++;
         rightPanel.add(welcomeLabel, gbc);
 
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        usernameLabel.setFont(new Font("Segoe UI", Font.PLAIN, normal_font));
         usernameLabel.setForeground(Color.BLACK);
         gbc.gridy++;
         gbc.gridwidth = 1;
         rightPanel.add(usernameLabel, gbc);
 
-        usernameField = new JTextField(20);
+        usernameField = new JTextField();
+        usernameField.setPreferredSize(textFieldSize);
+        usernameField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(usernameField, gbc);
 
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, normal_font));
         passwordLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy++;
         rightPanel.add(passwordLabel, gbc);
 
-        passwordField = new JPasswordField(20);
+        passwordField = new JPasswordField();
+        passwordField.setPreferredSize(textFieldSize);
+        passwordField.setFont(textFieldFont);
         gbc.gridx = 1;
         rightPanel.add(passwordField, gbc);
 
