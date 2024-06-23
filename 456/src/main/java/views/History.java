@@ -96,9 +96,9 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Create travel plan panels
-        JPanel travelPlanPanel1 = createTravelPlanPanel("Travel Plan 1");
-        JPanel travelPlanPanel2 = createTravelPlanPanel("Travel Plan 2");
-        JPanel travelPlanPanel3 = createTravelPlanPanel("Travel Plan 3");
+        JPanel travelPlanPanel1 = createTravelPlanPanel("Past Travel Plan 1");
+        JPanel travelPlanPanel2 = createTravelPlanPanel("Past Travel Plan 2");
+        JPanel travelPlanPanel3 = createTravelPlanPanel("Past Travel Plan 3");
 
         // Add travel plan panels to the main content
         mainContent.add(travelPlanPanel1);
@@ -227,7 +227,7 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         // For demonstration, replace this with the actual username obtained from login
         String username = "John Doe";
         SwingUtilities.invokeLater(() -> {
-            new Homepage(username).setVisible(true);
+            new History(username).setVisible(true);
         });
     }
 
