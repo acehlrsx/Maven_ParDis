@@ -287,11 +287,50 @@ public class CreateItinerary extends JFrame {
 
         // Date text box
         JTextField dateField = new JTextField("");
+        dateField.setForeground(Color.GRAY);
+        dateField.setText(" Enter Time");
         placePanel.add(dateField);
+        dateField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (dateField.getText().equals(" Enter Time")) {
+                    dateField.setText("");
+                    dateField.setForeground(Color.BLACK); // Normal text color
+                }
+            }
+        
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (dateField.getText().isEmpty()) {
+                    dateField.setForeground(Color.GRAY);
+                    dateField.setText(" Enter Time");
+                }
+            }
+        });
 
         // Destination name text box
         JTextField destinationField = new JTextField("");
+        destinationField.setForeground(Color.GRAY);
+        destinationField.setText(" Enter your destination");
         placePanel.add(destinationField);
+
+        destinationField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (destinationField.getText().equals(" Enter your destination")) {
+                    destinationField.setText("");
+                    destinationField.setForeground(Color.BLACK); // Normal text color
+                }
+            }
+        
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (destinationField.getText().isEmpty()) {
+                    destinationField.setForeground(Color.GRAY);
+                    destinationField.setText(" Enter your destination");
+                }
+            }
+        });
 
         // Set fixed size for text fields
         Dimension textFieldSize = new Dimension(150, 30);

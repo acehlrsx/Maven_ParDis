@@ -64,5 +64,23 @@ public class DatabaseHelper {
             }
         }
     }
+    public static void createDaysTable() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS days (" +
+                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                     "itinerary_id INTEGER, " +
+                     "day_number INTEGER, " +
+                     "FOREIGN KEY(itinerary_id) REFERENCES itineraries(id))";
+        executeStatement(sql);
+    }
+    
+    public static void createPlacesTable() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS places (" +
+                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                     "day_id INTEGER, " +
+                     "date TEXT, " +
+                     "destination TEXT, " +
+                     "FOREIGN KEY(day_id) REFERENCES days(id))";
+        executeStatement(sql);
+    }
 }
 
