@@ -19,8 +19,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         setLocationRelativeTo(null);
         setUndecorated(true);
 
-        Font titleFont = new Font("Segoe UI", Font.BOLD, title_font);
-        Font normalFont = new Font("Segoe UI", Font.PLAIN, normal_font);
         Font textFieldFont = new Font("Segoe UI", Font.PLAIN, 20);
         Dimension textFieldSize = new Dimension(300, 30);
 

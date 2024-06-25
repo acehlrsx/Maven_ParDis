@@ -14,7 +14,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
     // Constants for dimensions and font sizes
     private final int width = 1280;
     private final int height = 720;
-    private final int titleFontSize = 50;
     private final int normalFontSize = 20;
 
     public History(String username) {
@@ -79,17 +78,10 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
             }
         });
         JButton historyButton = createSidebarButton("HISTORY");
-        historyButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Open the History window
-                new History(username).setVisible(true);
-                dispose(); // Close the current window
-            }
-        });
+
         JButton logoutButton = createSidebarButton("LOGOUT");
         logoutButton.addActionListener(e -> logout());
 
-        // Add components to the sidebar
         sidebar.add(greetingLabel);
         sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
         sidebar.add(homepageButton);

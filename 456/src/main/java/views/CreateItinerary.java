@@ -12,23 +12,19 @@ public class CreateItinerary extends JFrame {
     private int dayCount = 1;
     private JPanel sidebar;
     private JButton addDayButton;
-    private JButton createItineraryButton;
+    private JLabel greetingLabel;
 
-    // Updated dimensions and font sizes
-    private final int width = 1280; // Updated width
-    private final int height = 720; // Updated height
-    private final int titleFontSize = 50; // Updated title font size
-    private final int normalFontSize = 20; // Updated normal font size
+    private final int width = 1280;
+    private final int height = 720;
+    private final int normalFontSize = 20;
 
     public CreateItinerary() {
         // Set frame properties
         setTitle("Create Itinerary");
-        setSize(width, height); // Use updated width and height
+        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setUndecorated(true); // Turn off the window navigation
-
-        // Add mouse listener to allow dragging of the window
+        setUndecorated(true);
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 initialClick = e.getPoint();
@@ -38,50 +34,42 @@ public class CreateItinerary extends JFrame {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                // get location of the window
                 int thisX = getLocation().x;
                 int thisY = getLocation().y;
 
-                // Determine how much the mouse moved since the initial click
                 int xMoved = e.getX() - initialClick.x;
                 int yMoved = e.getY() - initialClick.y;
 
-                // Move window to this position
                 int X = thisX + xMoved;
                 int Y = thisY + yMoved;
                 setLocation(X, Y);
             }
         });
 
-        // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
         setContentPane(mainPanel);
 
-        // Create top bar panel
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(new Color(224, 31, 147));
         mainPanel.add(topBar, BorderLayout.NORTH);
 
-        // Create close button
         JButton closeButton = new JButton("X");
         closeButton.setForeground(Color.BLACK);
         closeButton.setBackground(new Color(224, 31, 147));
         closeButton.setFocusPainted(false);
         closeButton.setBorderPainted(false);
-        closeButton.setFont(new Font("Arial", Font.BOLD, normalFontSize)); // Use updated normal font size
-        closeButton.addActionListener(e -> System.exit(0)); // Close application on click
+        closeButton.setFont(new Font("Arial", Font.BOLD, normalFontSize)); 
+        closeButton.addActionListener(e -> System.exit(0));
 
-        // Add close button to top bar
         topBar.add(closeButton, BorderLayout.EAST);
 
-        // Create toggle sidebar button
         JButton toggleSidebarButton = new JButton("☰");
         toggleSidebarButton.setForeground(Color.BLACK);
         toggleSidebarButton.setBackground(new Color(224, 31, 147));
         toggleSidebarButton.setFocusPainted(false);
         toggleSidebarButton.setBorderPainted(false);
-        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, 18)); // Use updated normal font size
+        toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, 18));
         toggleSidebarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,32 +77,27 @@ public class CreateItinerary extends JFrame {
             }
         });
 
-        // Add toggle button to top bar
         topBar.add(toggleSidebarButton, BorderLayout.WEST);
 
-        // Create sidebar panel
         sidebar = new JPanel();
         sidebar.setBackground(Color.WHITE);
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBorder(new ShadowBorder());
 
-        // Create buttons for the sidebar
+        greetingLabel = new JLabel("Hi Traveler! " + username, SwingConstants.CENTER);
+        greetingLabel.setFont(new Font("Arial", Font.BOLD, normalFontSize));
+        greetingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        greetingLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         JButton homepageButton = createSidebarButton("HOMEPAGE");
         homepageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Open the Create Itinerary window
                 new Homepage(username).setVisible(true);
-                dispose(); // Close the current window
+                dispose();
             }
         });
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
-        createItineraryButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Open the Create Itinerary window
-                new CreateItinerary().setVisible(true);
-                dispose(); // Close the current window
-            }
-        });
+
         JButton historyButton = createSidebarButton("HISTORY");
         historyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -127,7 +110,8 @@ public class CreateItinerary extends JFrame {
         logoutButton.addActionListener(e -> logout());
 
         // Add components to the sidebar
-        sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
+        sidebar.add(greetingLabel);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         sidebar.add(homepageButton);
         sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
         sidebar.add(createItineraryButton);
