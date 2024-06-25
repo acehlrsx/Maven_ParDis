@@ -187,6 +187,7 @@ public class CreateItinerary extends JFrame {
     private void addFixedFormPanel() {
         JPanel fixedFormPanel = new JPanel(new GridLayout(3, 4, 10, 10));
         fixedFormPanel.setBackground(Color.WHITE);
+        fixedFormPanel.setMaximumSize(new Dimension(1000, 150));
         fixedFormPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Date label and calendar text box
@@ -241,6 +242,7 @@ public class CreateItinerary extends JFrame {
     private void addDayPanel() {
         JPanel dayPanel = new JPanel();
         dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.Y_AXIS));
+        dayPanel.setMaximumSize(new Dimension(1000, 200));
         dayPanel.setBackground(Color.WHITE);
         dayPanel.setBorder(BorderFactory.createTitledBorder("Day " + dayCount));
 
