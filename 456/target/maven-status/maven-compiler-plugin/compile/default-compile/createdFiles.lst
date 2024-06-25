@@ -33,3 +33,4 @@ views\Homepage$ShadowBorder.class
 views\SignUpForm$1.class
 views\LoginForm$1.class
 design\RoundedCornerButton.class
+model\DatabaseHelper.class
