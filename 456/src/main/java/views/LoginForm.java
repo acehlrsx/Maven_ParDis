@@ -1,8 +1,10 @@
 package views;
 
+import model.DatabaseHelper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class LoginForm extends JFrame implements MouseListener, MouseMotionListener {
 
@@ -141,10 +143,25 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Perform login authentication (not implemented in this example)
-                // Assuming login is successful, open the Homepage
                 String username = usernameField.getText();
-                openHomepage(username);
+                String password = new String(passwordField.getPassword()); // Get password text
+
+                try {
+                    // Authenticate using the DatabaseHelper
+                    boolean loginSuccess = DatabaseHelper.authenticateUser(username, password);
+
+                    if (loginSuccess) {
+                        JOptionPane.showMessageDialog(LoginForm.this, "Login Successful!");
+                        openHomepage(username);
+                    } else {
+                        JOptionPane.showMessageDialog(LoginForm.this, 
+                            "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+                        passwordField.setText(""); 
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace(); // Log the error for debugging
+                    JOptionPane.showMessageDialog(LoginForm.this, "An error occurred during login.");
+                }
             }
         });
 

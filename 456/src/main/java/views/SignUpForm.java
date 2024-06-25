@@ -1,8 +1,11 @@
 package views;
 
 import javax.swing.*;
+import model.DatabaseHelper;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class SignUpForm extends JFrame implements MouseListener, MouseMotionListener {
 
@@ -148,8 +151,6 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
         gbc.gridy++;
         gbc.gridwidth = 2;
         rightPanel.add(showPasswordCheckBox, gbc);
-
-        // Event listener for showPasswordCheckBox
         showPasswordCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -177,14 +178,25 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText().trim();
                 String email = emailField.getText().trim();
+                String name = nameField.getText().trim();
                 String password1 = new String(passwordField.getPassword());
                 String password2 = new String(reenterPasswordField.getPassword());
 
                 if (password1.equals(password2)) {
-                    JOptionPane.showMessageDialog(SignUpForm.this, "Sign Up Successful!");
-                    // Navigate back to login form
-                    openLoginForm();
-                } else {
+                try {
+                    DatabaseHelper.createTable();
+                    boolean success = DatabaseHelper.insertUser(username, email, name, password1);
+                    if(success){
+                        JOptionPane.showMessageDialog(SignUpForm.this, "Sign Up Successful!");
+                        openLoginForm(); 
+                    }else{
+                        JOptionPane.showMessageDialog(SignUpForm.this, "Username already exists."); 
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(SignUpForm.this, "An error occurred during sign up.");
+                }
+            } else {
                     JOptionPane.showMessageDialog(SignUpForm.this, "Passwords do not match. Please try again.", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
