@@ -3,7 +3,7 @@ package model;
 import java.sql.*;
 
 public class DatabaseHelper {
-    private static final String DB_URL = "jdbc:sqlite:usersDB.db"; 
+    private static final String DB_URL = "jdbc:sqlite:Maven_ParDis/456/db/usersDB.db"; 
 
     private static void executeStatement(String sql) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL);

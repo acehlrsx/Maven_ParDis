@@ -62,7 +62,7 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
         createItineraryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new CreateItinerary().setVisible(true);
+                new CreateItinerary(username).setVisible(true);
                 dispose(); // Close the current window
             }
         });

@@ -58,7 +58,7 @@ public class Homepage extends JFrame implements MouseListener, MouseMotionListen
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
         createItineraryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new CreateItinerary().setVisible(true);
+                new CreateItinerary(username).setVisible(true);
                 dispose();
             }
         });

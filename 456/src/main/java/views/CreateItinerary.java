@@ -33,7 +33,7 @@ public class CreateItinerary extends JFrame {
     private final int height = 720;
     private final int normalFontSize = 20;
 
-    public CreateItinerary() {
+    public CreateItinerary(String username) {
         setTitle("Create Itinerary");
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -460,8 +460,9 @@ public class CreateItinerary extends JFrame {
     }
 
     public static void main(String[] args) {
+        String username = "";
         SwingUtilities.invokeLater(() -> {
-            new CreateItinerary().setVisible(true);
+            new CreateItinerary(username).setVisible(true);
         });
     }
 
