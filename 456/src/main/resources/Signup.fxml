@@ -19,47 +19,72 @@
                 <Image url="@images/journifylogo.png" />
             </image>
         </ImageView>
-        <Pane layoutX="640.0" layoutY="150.0" minHeight="406.0" minWidth="600.0" prefHeight="444.0" prefWidth="600.0" style="-fx-background-radius: 20;">
+        <Pane layoutX="640.0" layoutY="114.0" minHeight="406.0" minWidth="600.0" prefHeight="515.0" prefWidth="612.0" style="-fx-background-radius: 20;">
             <children>
-                <Text layoutX="238.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+                <Text layoutX="207.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up">
                     <font>
                         <Font name="Segoe UI Bold" size="50.0" />
                     </font>
                 </Text>
-                <Text layoutX="225.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hey, welcome back!">
+                <Text layoutX="35.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                     <font>
                         <Font name="Segoe UI" size="18.0" />
                     </font>
                 </Text>
-                <Text layoutX="50.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
-                    <font>
-                        <Font name="Segoe UI" size="18.0" />
-                    </font>
-                </Text>
-                <Text layoutX="50.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
-                    <font>
-                        <Font name="Segoe UI" size="18.0" />
-                    </font>
-                </Text>
-                <TextField fx:id="log_user" layoutX="175.0" layoutY="161.0" prefHeight="37.0" prefWidth="380.0">
+                <TextField fx:id="sign_user" layoutX="201.0" layoutY="118.0" prefHeight="37.0" prefWidth="380.0">
                <font>
                   <Font size="16.0" />
                </font></TextField>
-                <PasswordField fx:id="log_pass" layoutX="175.0" layoutY="226.0" prefHeight="37.0" prefWidth="380.0">
+            <Text layoutX="35.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
+               <font>
+                  <Font name="Segoe UI" size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="sign_email" layoutX="201.0" layoutY="175.0" prefHeight="37.0" prefWidth="380.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Text layoutX="35.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+               <font>
+                  <Font name="Segoe UI" size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="sign_name" layoutX="201.0" layoutY="231.0" prefHeight="37.0" prefWidth="380.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+                <Text layoutX="35.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                    <font>
+                        <Font name="Segoe UI" size="18.0" />
+                    </font>
+                </Text>
+                <PasswordField fx:id="sign_pass" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0">
                <font>
                   <Font size="16.0" />
                </font></PasswordField>
-                <CheckBox fx:id="show_check" layoutX="175.0" layoutY="288.0" mnemonicParsing="false" text="Show Password" />
-                <Button fx:id="log_button" layoutX="50.0" layoutY="334.0" mnemonicParsing="false" onAction="#LogBtnOnClicked" prefHeight="29.0" prefWidth="504.0" style="-fx-background-color: rgb( 224, 31, 147);" text="LOGIN" textFill="WHITE">
+            <Text layoutX="35.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Re-enter Password">
+               <font>
+                  <Font name="Segoe UI" size="18.0" />
+               </font>
+            </Text>
+                <CheckBox fx:id="sign_check" layoutX="201.0" layoutY="387.0" mnemonicParsing="false" text="Show Password" />
+                <Button fx:id="sign_log" layoutX="35.0" layoutY="418.0" mnemonicParsing="false" onAction="#SignBtnOnClicked" prefHeight="29.0" prefWidth="546.0" style="-fx-background-color: rgb( 224, 31, 147);" text="SIGN UP" textFill="WHITE">
                     <font>
                         <Font name="Segoe UI" size="15.0" />
                     </font>
                 </Button>
-                <Button layoutX="52.0" layoutY="371.0" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Don't have an account? Sign up now!" textFill="#fcab4e">
+                <Button fx:id="sign_txt" layoutX="35.0" layoutY="463.0" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Already have an account? Log in now!" textFill="#fcab4e">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
+            <PasswordField fx:id="sign_repass" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </PasswordField>
             </children>
         </Pane>
     </children>

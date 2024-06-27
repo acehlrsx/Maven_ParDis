@@ -47,7 +47,7 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(Color.WHITE);
         leftPanel.setPreferredSize(new Dimension(width/2, height));
-        ImageIcon imageIcon = new ImageIcon("456/resources/images/journifylogo.png");
+        ImageIcon imageIcon = new ImageIcon("Maven_ParDis/456/src/main/resources/images/journifylogo.png");
         Image scaledImage = imageIcon.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         JLabel imgLabel = new JLabel(scaledIcon);

@@ -33,18 +33,6 @@ public class CreateItinerary extends JFrame {
     private final int height = 720;
     private final int normalFontSize = 20;
 
-    private List<ItineraryDay> itineraryDays = new ArrayList<>();
-
-    private class ItineraryDay {
-        String dayDate;
-        List<Place> places = new ArrayList<>();
-    }
-
-    private class Place {
-        String date;
-        String destination;
-    }
-
     public CreateItinerary() {
         setTitle("Create Itinerary");
         setSize(width, height);
@@ -138,11 +126,11 @@ public class CreateItinerary extends JFrame {
         sidebar.add(greetingLabel);
         sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         sidebar.add(homepageButton);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
+        sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         sidebar.add(createItineraryButton);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
+        sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         sidebar.add(historyButton);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
+        sidebar.add(Box.createRigidArea(new Dimension(0, 20)));
         sidebar.add(logoutButton);
 
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -172,7 +160,7 @@ public class CreateItinerary extends JFrame {
         createItineraryButton = new RoundedCornerButton("Create Itinerary");
         createItineraryButton.setBackground(new Color(252, 171, 78));
         createItineraryButton.setForeground(Color.BLACK);
-        createItineraryButton.setFont(new Font("Arial", Font.BOLD, 15)); // Use updated normal font size
+        createItineraryButton.setFont(new Font("Arial", Font.BOLD, 15));
         createItineraryButton.setFocusPainted(false);
         createItineraryButton.setBorderPainted(false);
         createItineraryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -187,56 +175,73 @@ public class CreateItinerary extends JFrame {
                     String travelName = travelNameField.getText().trim(); 
                     String itineraryDate = calendarField.getText().trim();
 
-                    // 2. Input Validation
                     if (travelName.isEmpty() || itineraryDate.isEmpty()) {
                         JOptionPane.showMessageDialog(CreateItinerary.this, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
-
-                    // Validate other fields as needed
-                    // (e.g., ensure dates/times are in the correct format, destinations are not empty)
 
                     String startingLocation = startingLocationField.getText().trim();
                     String etd = etdField.getText().trim();
                     String destination = destinationField.getText().trim();
                     String eta = etaField.getText().trim();
 
-                    // 3. Insert itinerary into the database
                     int itineraryId = DatabaseHelper.insertItinerary(username, travelName, itineraryDate, startingLocation, etd, destination, eta);
                     if (itineraryId == -1) {
                         throw new SQLException("Failed to insert itinerary.");
                     }
+                    Component[] components = contentPanel.getComponents();
+                    System.out.println(components.length - 1);
+                for (int i = 1; i < components.length; i++) {
+                    Component dayPanelComp = components[i];
 
-                    // 4. Insert days and places for each day
-                    for (int i = 0; i < itineraryDays.size(); i++) {
-                        ItineraryDay day = itineraryDays.get(i);
+                    int dayNumber = i;
+                    System.out.println("dayNumber" + dayNumber);
+                    DatabaseHelper.insertDay(itineraryId, dayNumber);
+                    int dayId = DatabaseHelper.getLastInsertId();
 
-                        if (day.dayDate == null || day.dayDate.trim().isEmpty()) {
-                            throw new IllegalArgumentException("Day date cannot be empty.");
-                        }
+                    if (dayPanelComp instanceof JPanel && dayPanelComp.getName().startsWith("dayPanel")) {
+                        JPanel dayPanel = (JPanel) dayPanelComp;
+    
+                        JPanel placesContainer = (JPanel) ((JScrollPane) dayPanel.getComponent(0)).getViewport().getView();
+                        int numPlacePanels = placesContainer.getComponentCount();
+    
+                        System.out.println("place" + numPlacePanels);
+    
+                        for (int placePanelIndex = 0; placePanelIndex < numPlacePanels; placePanelIndex++) {
+                            JPanel placePanel = (JPanel) placesContainer.getComponent(placePanelIndex);
+    
+                            JTextField dateField = (JTextField) placePanel.getComponent(0);
+                            JTextField destinationField = (JTextField) placePanel.getComponent(1);
+    
+                            System.out.println(dateField.getText());
+                            System.out.println(destinationField.getText());
 
-                        DatabaseHelper.insertDay(itineraryId, i + 1, day.dayDate.trim());
-                        int dayId = DatabaseHelper.getLastInsertId(); 
+                            String placeTime = dateField.getText().trim();
+                            String placeDestination = destinationField.getText().trim();
 
-                        for (Place place : day.places) {
-                            DatabaseHelper.insertPlace(dayId, place.date, place.destination);
+                            // Handle placeholder text for empty fields
+                            if (placeTime.equals(" Enter Time")) {
+                                placeTime = ""; // Or set a default value
+                            }
+                            if (placeDestination.equals(" Enter your destination")) {
+                                placeDestination = "";
+                            }
+                            DatabaseHelper.insertPlace(dayId, placeTime, placeDestination);
                         }
                     }
-
-                    // 5. Show success notification and navigate
-                    JOptionPane.showMessageDialog(CreateItinerary.this, "Itinerary created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    dispose();
+                }
 
                 } catch (SQLException | IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(CreateItinerary.this, "Error creating itinerary: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace(); // Log the error for debugging
                 }
+
             }
         });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(addDayButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(20, 0))); // Add space between buttons
+        buttonPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonPanel.add(createItineraryButton);
 
 
@@ -296,6 +301,7 @@ public class CreateItinerary extends JFrame {
 
     private void addDayPanel() {
         JPanel dayPanel = new JPanel();
+        dayPanel.setName("dayPanel" + dayCount);
         dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.Y_AXIS));
         dayPanel.setMaximumSize(new Dimension(1000, 200));
         dayPanel.setBackground(Color.WHITE);
@@ -308,8 +314,6 @@ public class CreateItinerary extends JFrame {
         JScrollPane placesScrollPane = new JScrollPane(placesContainer);
         placesScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         placesScrollPane.setPreferredSize(new Dimension(400, 200));
-
-        itineraryDays.add(new ItineraryDay());
 
         addPlacePanel(placesContainer, dayCount, 1);
 
@@ -341,6 +345,7 @@ public class CreateItinerary extends JFrame {
         placePanel.setBorder(BorderFactory.createTitledBorder("Place " + placeNumber));
 
         JTextField dateField = new JTextField("");
+        dateField.setName("dateField" + placeNumber);
         dateField.setForeground(Color.GRAY);
         dateField.setText(" Enter Time");
         placePanel.add(dateField);
@@ -363,6 +368,7 @@ public class CreateItinerary extends JFrame {
         });
 
         JTextField destinationField = new JTextField("");
+        destinationField.setName("destinationField" + placeNumber);
         destinationField.setForeground(Color.GRAY);
         destinationField.setText(" Enter your destination");
         placePanel.add(destinationField);
@@ -392,11 +398,6 @@ public class CreateItinerary extends JFrame {
         placesContainer.add(placePanel);
         placesContainer.revalidate();
         placesContainer.repaint();
-
-        ItineraryDay currentDay = itineraryDays.get(dayNumber - 1); // Get current day
-        currentDay.places.add(new Place());  
-        currentDay.places.get(placeNumber - 1).date = dateField.getText();
-        currentDay.places.get(placeNumber - 1).destination = destinationField.getText();
     }
 
     private JButton createSidebarButton(String text) {

@@ -1,8 +1,6 @@
 package model;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseHelper {
     private static final String DB_URL = "jdbc:sqlite:usersDB.db"; 
@@ -79,7 +77,7 @@ public class DatabaseHelper {
         String sql = "CREATE TABLE IF NOT EXISTS places (" +
                      "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                      "day_id INTEGER, " +
-                     "date TEXT, " +
+                     "time TEXT, " +
                      "destination TEXT, " +
                      "FOREIGN KEY(day_id) REFERENCES days(id))";
         executeStatement(sql);
@@ -112,24 +110,23 @@ public class DatabaseHelper {
     }
 
     // In DatabaseHelper class
-    public static void insertDay(int itineraryId, int dayNumber, String dayDate) throws SQLException {
-        String sql = "INSERT INTO days(itinerary_id, day_number, day_date) VALUES(?, ?, ?)"; // Updated SQL query
+    public static void insertDay(int itineraryId, int dayNumber) throws SQLException {
+        String sql = "INSERT INTO days(itinerary_id, day_number) VALUES(?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, itineraryId);
             pstmt.setInt(2, dayNumber);
-            pstmt.setString(3, dayDate); // Set the dayDate parameter
             pstmt.executeUpdate();
         }
     }
 
 
-    public static void insertPlace(int dayId, String date, String destination) throws SQLException {
-        String sql = "INSERT INTO places(day_id, date, destination) VALUES(?, ?, ?)";
+    public static void insertPlace(int dayId, String time, String destination) throws SQLException {
+        String sql = "INSERT INTO places(day_id, time, destination) VALUES(?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, dayId);
-            pstmt.setString(2, date);
+            pstmt.setString(2, time);
             pstmt.setString(3, destination);
             pstmt.executeUpdate();
         }
