@@ -11,32 +11,27 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
     private JLabel greetingLabel;
     private int mouseX, mouseY;
 
-    // Constants for dimensions and font sizes
     private final int width = 1280;
     private final int height = 720;
     private final int normalFontSize = 20;
 
     public History(String username) {
-        // Set frame properties
         setTitle("History");
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setUndecorated(true); // Turn off the window navigation
+        setUndecorated(true); 
 
-        // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
         setContentPane(mainPanel);
 
-        // Create top bar panel
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(new Color(224, 31, 147));
         topBar.addMouseListener(this);
         topBar.addMouseMotionListener(this);
         mainPanel.add(topBar, BorderLayout.NORTH);
 
-        // Create close button
         JButton closeButton = new JButton("X");
         closeButton.setForeground(Color.BLACK);
         closeButton.setBackground(new Color(224, 31, 147));
@@ -45,26 +40,21 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         closeButton.setFont(new Font("Arial", Font.BOLD, 18));
         closeButton.addActionListener(e -> System.exit(0)); // Close application on click
 
-        // Add close button to top bar
         topBar.add(closeButton, BorderLayout.EAST);
 
-        // Create sidebar panel
         sidebar = new JPanel();
         sidebar.setBackground(Color.WHITE);
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBorder(new ShadowBorder());
 
-        // Create greeting label
         greetingLabel = new JLabel("Hi Traveler! " + username, SwingConstants.CENTER);
         greetingLabel.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         greetingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         greetingLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Create buttons for the sidebar
         JButton homepageButton = createSidebarButton("HOMEPAGE");
         homepageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Open the Create Itinerary window
                 new Homepage(username).setVisible(true);
                 dispose(); // Close the current window
             }
@@ -72,7 +62,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         JButton createItineraryButton = createSidebarButton("CREATE ITINERARY");
         createItineraryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Open the Create Itinerary window
                 new CreateItinerary().setVisible(true);
                 dispose(); // Close the current window
             }
@@ -92,21 +81,17 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         sidebar.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
         sidebar.add(logoutButton);
 
-        // Add sidebar and main content to the main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
 
-        // Create the main content panel
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBackground(Color.WHITE);
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Create travel plan panels
         JPanel travelPlanPanel1 = createTravelPlanPanel("Past Travel Plan 1");
         JPanel travelPlanPanel2 = createTravelPlanPanel("Past Travel Plan 2");
         JPanel travelPlanPanel3 = createTravelPlanPanel("Past Travel Plan 3");
 
-        // Add travel plan panels to the main content
         mainContent.add(travelPlanPanel1);
         mainContent.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
         mainContent.add(travelPlanPanel2);
@@ -115,7 +100,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
 
         mainPanel.add(mainContent, BorderLayout.CENTER);
 
-        // Create toggle sidebar button
         JButton toggleSidebarButton = new JButton("=");
         toggleSidebarButton.setForeground(Color.BLACK);
         toggleSidebarButton.setBackground(new Color(224, 31, 147));
@@ -124,7 +108,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         toggleSidebarButton.setFont(new Font("Arial", Font.BOLD, normalFontSize));
         toggleSidebarButton.addActionListener(e -> toggleSidebar());
 
-        // Add toggle button to top bar
         topBar.add(toggleSidebarButton, BorderLayout.WEST);
     }
 
@@ -177,7 +160,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
 
     private void travelPlanClicked(String planName) {
         JOptionPane.showMessageDialog(this, "You clicked on: " + planName, "Travel Plan Clicked", JOptionPane.INFORMATION_MESSAGE);
-        // Perform additional actions, like opening a detailed view of the travel plan
     }
 
     private void toggleSidebar() {
@@ -194,7 +176,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
         });
     }
 
-    // MouseListener methods
     @Override
     public void mouseClicked(MouseEvent e) {
     }
@@ -217,7 +198,6 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
     public void mouseExited(MouseEvent e) {
     }
 
-    // MouseMotionListener method
     @Override
     public void mouseDragged(MouseEvent e) {
         int newX = e.getXOnScreen() - mouseX;
@@ -230,14 +210,12 @@ public class History extends JFrame implements MouseListener, MouseMotionListene
     }
 
     public static void main(String[] args) {
-        // For demonstration, replace this with the actual username obtained from login
         String username = "John Doe";
         SwingUtilities.invokeLater(() -> {
             new History(username).setVisible(true);
         });
     }
 
-    // Custom Border for shadow effect
     class ShadowBorder extends AbstractBorder {
         private static final long serialVersionUID = 1L;
         private final int shadowSize = 5;

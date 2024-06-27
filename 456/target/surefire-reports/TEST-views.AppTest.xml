@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="views.AppTest" time="0.062" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="views.AppTest" time="0.092" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\test-classes;C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\classes;C:\Users\Drian\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Drian\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Drian\.m2\repository\org\xerial\sqlite-jdbc\3.46.0.0\sqlite-jdbc-3.46.0.0.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-api\1.7.5\slf4j-api-1.7.5.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-log4j12\1.7.5\slf4j-log4j12-1.7.5.jar;C:\Users\Drian\.m2\repository\log4j\log4j\1.2.17\log4j-1.2.17.jar;"/>
+    <property name="java.class.path" value="C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\test-classes;C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\classes;C:\Users\Drian\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Drian\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Drian\.m2\repository\org\xerial\sqlite-jdbc\3.46.0.0\sqlite-jdbc-3.46.0.0.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-api\1.7.5\slf4j-api-1.7.5.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-log4j12\1.7.5\slf4j-log4j12-1.7.5.jar;C:\Users\Drian\.m2\repository\log4j\log4j\1.2.17\log4j-1.2.17.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-controls\22.0.1\javafx-controls-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-graphics\22.0.1\javafx-graphics-22.0.1.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-graphics\22.0.1\javafx-graphics-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-base\22.0.1\javafx-base-22.0.1.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-base\22.0.1\javafx-base-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-fxml\22.0.1\javafx-fxml-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-controls\22.0.1\javafx-controls-22.0.1.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,9 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\Drian\AppData\Local\Temp\surefire8595637956246267469\surefirebooter11975279662930770620.jar C:\Users\Drian\AppData\Local\Temp\surefire8595637956246267469 2024-06-25T09-06-13_133-jvmRun1 surefire10844688513244900704tmp surefire_08200588378359143986tmp"/>
+    <property name="sun.java.command" value="C:\Users\Drian\AppData\Local\Temp\surefire4858891157042140277\surefirebooter3160045300627144384.jar C:\Users\Drian\AppData\Local\Temp\surefire4858891157042140277 2024-06-25T14-30-24_848-jvmRun1 surefire1531588775680327900tmp surefire_0315173184669044778tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\test-classes;C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\classes;C:\Users\Drian\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Drian\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Drian\.m2\repository\org\xerial\sqlite-jdbc\3.46.0.0\sqlite-jdbc-3.46.0.0.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-api\1.7.5\slf4j-api-1.7.5.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-log4j12\1.7.5\slf4j-log4j12-1.7.5.jar;C:\Users\Drian\.m2\repository\log4j\log4j\1.2.17\log4j-1.2.17.jar;"/>
+    <property name="surefire.test.class.path" value="C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\test-classes;C:\Users\Drian\Desktop\Summer Class\PDC\Maven_ParDis\456\target\classes;C:\Users\Drian\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Drian\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Drian\.m2\repository\org\xerial\sqlite-jdbc\3.46.0.0\sqlite-jdbc-3.46.0.0.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-api\1.7.5\slf4j-api-1.7.5.jar;C:\Users\Drian\.m2\repository\org\slf4j\slf4j-log4j12\1.7.5\slf4j-log4j12-1.7.5.jar;C:\Users\Drian\.m2\repository\log4j\log4j\1.2.17\log4j-1.2.17.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-controls\22.0.1\javafx-controls-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-graphics\22.0.1\javafx-graphics-22.0.1.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-graphics\22.0.1\javafx-graphics-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-base\22.0.1\javafx-base-22.0.1.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-base\22.0.1\javafx-base-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-fxml\22.0.1\javafx-fxml-22.0.1-win.jar;C:\Users\Drian\.m2\repository\org\openjfx\javafx-controls\22.0.1\javafx-controls-22.0.1.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Drian"/>
     <property name="user.language" value="en"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Drian\AppData\Local\Temp\surefire8595637956246267469\surefirebooter11975279662930770620.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Drian\AppData\Local\Temp\surefire4858891157042140277\surefirebooter3160045300627144384.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.1+12-LTS-29"/>
@@ -58,5 +58,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="views.AppTest" time="0.005"/>
+  <testcase name="shouldAnswerWithTrue" classname="views.AppTest" time="0.007"/>
 </testsuite>

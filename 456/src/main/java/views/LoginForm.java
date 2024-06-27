@@ -14,7 +14,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
     private int height = 720, width = 1280, normal_font = 20, title_font = 50;
 
     public LoginForm() {
-        // Set frame properties
         setTitle("Login");
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,18 +23,15 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         Font textFieldFont = new Font("Segoe UI", Font.PLAIN, 20);
         Dimension textFieldSize = new Dimension(300, 30);
 
-        // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(224, 31, 147));
         setContentPane(mainPanel);
 
-        // Create top bar panel
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(new Color(224, 31, 147));
         topBar.addMouseListener(this);
         topBar.addMouseMotionListener(this);
 
-        // Create close button
         JButton closeButton = new JButton("X");
         closeButton.setForeground(Color.BLACK);
         closeButton.setBackground(new Color(224, 31, 147));
@@ -44,13 +40,10 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         closeButton.setFont(new Font("Arial", Font.BOLD, 16));
         closeButton.addActionListener(e -> System.exit(0));
 
-        // Add close button to top bar
         topBar.add(closeButton, BorderLayout.EAST);
 
-        // Add top bar to main panel
         mainPanel.add(topBar, BorderLayout.NORTH);
 
-        // Create panels for left and right sides
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(Color.WHITE);
         leftPanel.setPreferredSize(new Dimension(width/2, height));
@@ -61,7 +54,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         leftPanel.setLayout(new BorderLayout());
         leftPanel.add(imgLabel, BorderLayout.CENTER);
 
-        // Create right panel
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBackground(Color.WHITE);
         rightPanel.setPreferredSize(new Dimension(width/2, height));
@@ -69,7 +61,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Components for right panel
         JLabel loginLabel = new JLabel("Login");
         loginLabel.setFont(new Font("Segoe UI", Font.BOLD, title_font));
         loginLabel.setForeground(Color.BLACK);
@@ -110,7 +101,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         gbc.gridx = 1;
         rightPanel.add(passwordField, gbc);
 
-        // Show Password checkbox
         JCheckBox showPasswordCheckBox = new JCheckBox("Show Password");
         showPasswordCheckBox.setForeground(Color.BLACK);
         showPasswordCheckBox.setBackground(Color.WHITE);
@@ -118,14 +108,12 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         gbc.gridy++;
         gbc.gridwidth = 2;
         rightPanel.add(showPasswordCheckBox, gbc);
-
-        // Event listener for showPasswordCheckBox
         showPasswordCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    passwordField.setEchoChar((char) 0); // Show the password
+                    passwordField.setEchoChar((char) 0);
                 } else {
-                    passwordField.setEchoChar('*'); // Hide the password
+                    passwordField.setEchoChar('*');
                 }
             }
         });
@@ -139,15 +127,13 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         gbc.gridy++;
         rightPanel.add(loginButton, gbc);
 
-        // Action listener for LOGIN button
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
-                String password = new String(passwordField.getPassword()); // Get password text
+                String password = new String(passwordField.getPassword());
 
                 try {
-                    // Authenticate using the DatabaseHelper
                     boolean loginSuccess = DatabaseHelper.authenticateUser(username, password);
 
                     if (loginSuccess) {
@@ -159,20 +145,18 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
                         passwordField.setText(""); 
                     }
                 } catch (SQLException ex) {
-                    ex.printStackTrace(); // Log the error for debugging
+                    ex.printStackTrace();
                     JOptionPane.showMessageDialog(LoginForm.this, "An error occurred during login.");
                 }
             }
         });
 
-        // Sign Up Label as clickable link
         JLabel signUpLabel = new JLabel("Don't have an account? Sign Up");
         signUpLabel.setForeground(new Color(252, 171, 78));
         signUpLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         signUpLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Open sign up form or dialog
                 openSignUpForm();
             }
         });
@@ -182,12 +166,10 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
         gbc.anchor = GridBagConstraints.CENTER;
         rightPanel.add(signUpLabel, gbc);
 
-        // Add panels to main panel
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(rightPanel, BorderLayout.CENTER);
     }
 
-    // MouseListener methods
     @Override
     public void mouseClicked(MouseEvent e) {
     }
@@ -210,7 +192,6 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
     public void mouseExited(MouseEvent e) {
     }
 
-    // MouseMotionListener method
     @Override
     public void mouseDragged(MouseEvent e) {
         int newX = e.getXOnScreen() - mouseX;
@@ -222,19 +203,16 @@ public class LoginForm extends JFrame implements MouseListener, MouseMotionListe
     public void mouseMoved(MouseEvent e) {
     }
 
-    // Method to open sign up form or dialog
     private void openSignUpForm() {
-        // Replace with your sign up form creation logic
         SignUpForm signUpForm = new SignUpForm();
         signUpForm.setVisible(true);
-        this.setVisible(false); // Hide login form if needed
+        this.setVisible(false);
     }
 
-    // Method to open homepage
     private void openHomepage(String username) {
         Homepage homepage = new Homepage(username);
         homepage.setVisible(true);
-        this.setVisible(false); // Hide login form if needed
+        this.setVisible(false);
     }
 
     public static void main(String[] args) {

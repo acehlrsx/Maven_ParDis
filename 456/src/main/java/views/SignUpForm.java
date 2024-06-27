@@ -171,8 +171,6 @@ public class SignUpForm extends JFrame implements MouseListener, MouseMotionList
         signUpButton.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridy++;
         rightPanel.add(signUpButton, gbc);
-
-        // Action listener for SIGN UP button
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

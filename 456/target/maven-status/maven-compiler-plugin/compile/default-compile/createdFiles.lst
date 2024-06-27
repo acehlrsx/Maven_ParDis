@@ -10,14 +10,17 @@ views\CreateItinerary$ShadowBorder.class
 views\CreateItinerary.class
 views\History$4.class
 views\Homepage.class
+views\CreateItinerary$Place.class
 views\History$1.class
 views\History$ShadowBorder.class
 design\RoundedBorder.class
+views\CreateItinerary$11.class
 views\CreateItinerary$2.class
 views\CreateItinerary$7.class
 views\Homepage$4.class
 views\App.class
 views\SignUpForm$2.class
+views\CreateItinerary$ItineraryDay.class
 design\RoundedCornerButton$1.class
 views\LoginForm$3.class
 views\SignUpForm.class
@@ -33,4 +36,5 @@ views\Homepage$ShadowBorder.class
 views\SignUpForm$1.class
 views\LoginForm$1.class
 design\RoundedCornerButton.class
+views\CreateItinerary$10.class
 model\DatabaseHelper.class
