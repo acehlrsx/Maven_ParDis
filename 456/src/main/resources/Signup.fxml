@@ -11,15 +11,22 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.SignupController">
     <children>
-      <Pane prefHeight="37.0" prefWidth="1280.0" style="-fx-background-color: rgb( 224, 31, 147);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Pane prefHeight="37.0" prefWidth="1280.0" style="-fx-background-color: rgb( 224, 31, 147);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="exit" layoutX="1242.0" layoutY="6.0" mnemonicParsing="false" onAction="#close_window" style="-fx-background-color: transparent;" text="X">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children></Pane>
         <ImageView fitHeight="600.0" fitWidth="600.0" layoutX="40.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@images/journifylogo.png" />
             </image>
         </ImageView>
-        <Pane layoutX="640.0" layoutY="114.0" minHeight="406.0" minWidth="600.0" prefHeight="515.0" prefWidth="612.0" style="-fx-background-radius: 20;">
+        <Pane layoutX="640.0" layoutY="114.0" minHeight="406.0" minWidth="600.0" prefHeight="550.0" prefWidth="612.0" style="-fx-background-radius: 20;">
             <children>
                 <Text layoutX="207.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up">
                     <font>
@@ -60,7 +67,12 @@
                         <Font name="Segoe UI" size="18.0" />
                     </font>
                 </Text>
-                <PasswordField fx:id="sign_pass" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0">
+            <TextField fx:id="sign_pass_shown" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+                <PasswordField fx:id="sign_pass_hidden" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0">
                <font>
                   <Font size="16.0" />
                </font></PasswordField>
@@ -69,22 +81,27 @@
                   <Font name="Segoe UI" size="18.0" />
                </font>
             </Text>
-                <CheckBox fx:id="sign_check" layoutX="201.0" layoutY="387.0" mnemonicParsing="false" text="Show Password" />
-                <Button fx:id="sign_log" layoutX="35.0" layoutY="418.0" mnemonicParsing="false" onAction="#SignBtnOnClicked" prefHeight="29.0" prefWidth="546.0" style="-fx-background-color: rgb( 224, 31, 147);" text="SIGN UP" textFill="WHITE">
-                    <font>
-                        <Font name="Segoe UI" size="15.0" />
-                    </font>
-                </Button>
-                <Button fx:id="sign_txt" layoutX="35.0" layoutY="463.0" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Already have an account? Log in now!" textFill="#fcab4e">
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </Button>
-            <PasswordField fx:id="sign_repass" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0">
+            <TextField fx:id="sign_repass_shown" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="sign_repass_hidden" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0">
                <font>
                   <Font size="16.0" />
                </font>
             </PasswordField>
+                <CheckBox fx:id="sign_check" layoutX="201.0" layoutY="387.0" mnemonicParsing="false" onAction="#handleShowPassword_in_Signup" text="Show Password" />
+                <Button fx:id="sign_log" layoutX="35.0" layoutY="430.0" mnemonicParsing="false" onAction="#SignBtnOnClicked" prefHeight="29.0" prefWidth="546.0" style="-fx-background-color: rgb( 224, 31, 147);" text="SIGN UP" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+                </Button>
+                <Button fx:id="goLoginBtn" layoutX="35.0" layoutY="475.0" mnemonicParsing="false" onAction="#goLogin" style="-fx-background-color: transparent;" text="Already have an account? Log in now!" textFill="#fcab4e">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Button>
             </children>
         </Pane>
     </children>

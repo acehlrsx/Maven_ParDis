@@ -1,84 +1,382 @@
 package views;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import model.DatabaseHelper;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.stream.events.Comment;
+
+import design.RoundBorder;
+import views.addDayController;
 
 public class MainController {
 
-    @FXML
-    private Button log_button;
+    public String loggedInUsername;
 
     @FXML
-    private PasswordField log_pass;
+    private Button addDayBtn;
 
     @FXML
-    private TextField log_user;
+    private AnchorPane anchorHome;
 
     @FXML
-    private CheckBox show_check;
+    private VBox anchorHome1;
 
     @FXML
-    void LogBtnOnClicked(ActionEvent event) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignUp.fxml"));
-        Parent signUpRoot = loader.load();
+    private VBox anchorTest;
 
-        // Optional: Get the SignUpController instance
-        // SignUpController signUpController = loader.getController();
+    @FXML
+    private AnchorPane anchorTest1;
 
-        // Create a new scene for the sign-up form
-        Scene signUpScene = new Scene(signUpRoot);
-        signUpScene.setFill(Color.TRANSPARENT);
-        Rectangle roundedRect = new Rectangle(1280, 720); 
-        roundedRect.setArcWidth(20);
-        roundedRect.setArcHeight(20);
-        signUpScene.getRoot().setClip(roundedRect);
+    @FXML
+    private DatePicker calendarField;
 
-        // Get the stage (window) from the login button
-        Stage currentStage = (Stage) log_button.getScene().getWindow();
+    @FXML
+    private Button createBtn;
 
-        // Set the sign-up scene on the current stage (replace the login scene)
-        currentStage.setScene(signUpScene);
-        currentStage.setTitle("Sign Up");
+    @FXML
+    private TextField destinationPointField;
+
+    @FXML
+    private TextField etaField;
+
+    @FXML
+    private TextField etdField;
+
+    @FXML
+    private Button exit;
+
+    @FXML
+    private Button historyBtn;
+
+    @FXML
+    private Button homepageBtn;
+
+    @FXML
+    private Button logoutBtn;
+
+    @FXML
+    private TabPane mainTabPane;
+
+    @FXML
+    private Button saveBtn;
+
+    @FXML
+    private Button savePhotoBtn;
+
+    @FXML
+    private ScrollPane scrollPaneContent;
+
+    @FXML
+    private AnchorPane sidebarPane;
+
+    @FXML
+    private Button sidepanelBtn;
+
+    @FXML
+    private SplitPane splitPane;
+
+    @FXML
+    private TextField startingField;
+
+    @FXML
+    private Pane test;
+
+    @FXML
+    private TextField travelNameField;
+
+    @FXML
+    private addDayController addDayControllerInstance;
+
+    @FXML
+    public TravelController travelControllerInstance;
+
+    public void initialize() {
+        addDayControllerInstance = new addDayController();
+        addPlaceControllerInstance = new addPlaceController();
+        travelControllerInstance = new TravelController();
+        loadTravelPanels();
+    }
+
+    void gotoShow(){
+        selectTab("Show");
     }
 
     @FXML
-    private CheckBox sign_check;
+    void goToCreate(ActionEvent event) {
+        selectTab("Create");
+    }
 
     @FXML
-    private TextField sign_email;
+    void goToHistory(ActionEvent event) {
+        selectTab("History");
+    }
 
     @FXML
-    private Button sign_log;
+    void goToHomePage(ActionEvent event) {
+        selectTab("Homepage");
+        loadTravelPanels();
+    }
 
     @FXML
-    private TextField sign_name;
+    void logoutBtn(ActionEvent event) {
+        logout();
+    }
 
     @FXML
-    private PasswordField sign_pass;
+    void sideShower(ActionEvent event) {
+
+    }
+
+    void loadTravelPanels() {
+        System.out.println("Start loading panels...");
+        
+        try {
+            anchorHome1.getChildren().clear();
+            System.out.println("Cleared anchorHome1 children.");
+            anchorHome.setPrefHeight(0);
+            anchorHome1.setPrefHeight(628);
+            anchorHome.setMinHeight(628);
+        
+            // Fetch travel names from the database
+            List<String> travelNames = DatabaseHelper.getNotDoneTravelNames("");         
+            for (String travelName : travelNames) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/addTravel.fxml"));        
+                HBox travelPanelsContainer = loader.load();        
+                Label travelLabel = (Label) loader.getNamespace().get("travelName");
+                travelLabel.setText(travelName);
+        
+                // Calculate the new height for the anchorHome1
+                double currentHeight = anchorHome.getPrefHeight();
+
+                System.out.println(currentHeight);
+                double newHeight = currentHeight + travelPanelsContainer.getPrefHeight() + 20;
+
+                System.out.println("new "  + newHeight);
+        
+                // Ensure the minimum height of 628
+                if (newHeight < 628) {
+                    newHeight = newHeight;
+                }
+                anchorHome1.setPrefHeight(newHeight);
+                anchorHome.setPrefHeight(newHeight);
+
+                anchorHome1.getChildren().add(travelPanelsContainer);
+                System.out.println("Added travel panel for: " + travelName);
+            }
+        } catch (IOException e) {
+            showAlert("Error", "Failed to load travel panels: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
+        }
+        
+        System.out.println("Finished loading panels.");
+    }
+        
 
     @FXML
-    private PasswordField sign_repass;
+    private void AddDayPanel() {
+        addDayControllerInstance.AddDayPanel(anchorTest, anchorTest1);
+    }
 
     @FXML
-    private Button sign_txt;
+    private void removeDay(ActionEvent event){
+        addDayControllerInstance.removeDay(event);
+    }
+
+    public void selectTab(String tabText) {
+        for (Tab tab : mainTabPane.getTabs()) {
+            if (tab.getText().equals(tabText)) {
+                mainTabPane.getSelectionModel().select(tab);
+                break;
+            }
+        }
+        Platform.runLater(() -> {
+        System.out.println("Switching to " + tabText + " tab");
+    });
+    }
+
+    private void logout() {
+        loggedInUsername = null;
+        showAlert("Logout", "You have been logged out.", Alert.AlertType.INFORMATION);
+    }
 
     @FXML
-    private TextField sign_user;
+    private VBox dayPanelsContainer;
 
     @FXML
-    void SignBtnOnClicked(ActionEvent event) {
+
+    private addDayController addDayController;
+    private addPlaceController addPlaceControllerInstance;
+
+    @FXML
+    private void saveToDatabase(ActionEvent event) {
+        try {
+            String travelName = "Travel Name";
+            String itineraryDate = "2024-06-30";
+            String startingLocation = "Starting Location";
+            String etd = "08:00 AM";
+            String destination = "Destination";
+            String eta = "06:00 PM";
+
+            // Validate required fields
+            if (travelName.isEmpty() || itineraryDate.isEmpty() || startingLocation.isEmpty() ||
+                etd.isEmpty() || destination.isEmpty() || eta.isEmpty()) {
+                showAlert("Error", "Please fill in all required fields.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Insert the itinerary into the database
+            int itineraryId = DatabaseHelper.insertItinerary(loggedInUsername, travelName, itineraryDate, startingLocation, etd, destination, eta);
+            if (itineraryId == -1) {
+                throw new SQLException("Failed to insert itinerary.");
+            }
+
+            List<VBox> dayPanelsContainers = addDayControllerInstance.getDayPanelsContainers();
+
+            boolean dayAdded = false;
+
+            for (VBox dayPanel : dayPanelsContainers) {
+                Label dayLabel = (Label) dayPanel.lookup("#dayLabel");
+                if (dayLabel == null) {
+                    System.err.println("dayLabel is null in dayPanel: " + dayPanel);
+                    continue;
+                }
+                String dayText = dayLabel.getText();
+
+                System.out.println("Processing Day: " + dayText);
+
+                DatabaseHelper.insertDay(itineraryId, Integer.parseInt(dayText.split(" ")[1]));
+                int dayId = DatabaseHelper.getLastInsertId();
+
+                VBox placesContainer = (VBox) dayPanel.lookup("#placesContainer");
+                if (placesContainer == null) {
+                    System.err.println("placesContainer is null in dayPanel: " + dayPanel);
+                    continue;
+                }
+
+                boolean placeAdded = false;
+
+                for (int placeIndex = 0; placeIndex < placesContainer.getChildren().size(); placeIndex++) {
+                    HBox placePanel = (HBox) placesContainer.getChildren().get(placeIndex);
+                    TextField timeField = (TextField) placePanel.lookup("#placeTimeField");
+                    TextField destinationField = (TextField) placePanel.lookup("#placeDestinationField");
+
+                    if (timeField == null || destinationField == null) {
+                        System.err.println("placeTimeField or placeDestinationField is null in placePanel: " + placePanel);
+                        continue;
+                    }
+
+                    String placeTime = timeField.getText().trim();
+                    String placeDestination = destinationField.getText().trim();
+
+                    System.out.println("Place Time: " + placeTime + ", Destination: " + placeDestination);
+
+                    if (placeTime.isEmpty()) {
+                        placeTime = "Unknown Time";
+                    }
+                    if (placeDestination.isEmpty()) {
+                        placeDestination = "Unknown Destination";
+                    }
+
+                    DatabaseHelper.insertPlace(dayId, placeTime, placeDestination, "null");
+                    placeAdded = true;
+                    timeField.clear();
+                    destinationField.clear();
+                }
+
+                if (placeAdded) {
+                    dayAdded = true;
+                }
+            }
+
+            if (!dayAdded) {
+                showAlert("Error", "Please add at least one day and one place to save the itinerary.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Clear fields after successful save
+            travelNameField.clear();
+            calendarField.getEditor().clear();
+            startingField.clear();
+            etdField.clear();
+            destinationPointField.clear();
+            etaField.clear();
+
+            reload();
+
+            // Show success message
+            showAlert("Save Successful", "Data saved to database successfully.", Alert.AlertType.INFORMATION);
+        } catch (SQLException e) {
+            // Handle any SQL exceptions
+            showAlert("Error", "Failed to save data to database: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void close_window(ActionEvent event) {
+        ((Stage) exit.getScene().getWindow()).close();
+    }
+
+    public void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void setUsername(String username) {
+        loggedInUsername =  username;
+    }
+
+    public void reload(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+            Parent dashboardRoot = loader.load();
+
+            MainController dashboardController = loader.getController();
+            dashboardController.setUsername(loggedInUsername);
+
+            Stage dashboardStage = new Stage();
+            dashboardStage.setTitle("Dashboard");
+            dashboardStage.setScene(new Scene(dashboardRoot));
+            dashboardStage.show();
+
+            ((Stage) createBtn.getScene().getWindow()).close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void savePhotos(ActionEvent event) {
 
     }
 

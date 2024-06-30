@@ -1,0 +1,24 @@
+.my-split-pane .split-pane-divider {
+    -fx-padding: 0.1; /* Remove any default padding around the divider */
+    -fx-background-color: black; /* Make the divider background transparent */
+    -fx-cursor: default; /* Optional: change the cursor to a non-draggable one */
+    -fx-pref-width: 0;
+}
+.scroll-pane {
+    -fx-hbar-policy: NEVER; /* Hide horizontal scrollbar */
+    -fx-vbar-policy: NEVER; /* Hide vertical scrollbar */
+    -fx-background-color: white;
+}
+/* Global styling for all DatePickers */
+.date-picker > .text-field {
+    -fx-alignment: CENTER;
+}
+
+/* Or, target a specific DatePicker with a style class */
+.my-date-picker > .text-field {
+    -fx-alignment: CENTER;
+}
+.rounded-button {
+    -fx-background-radius: 20 20 0 0; /* top-left and top-right corners rounded */
+    -fx-background-color: rgb(224, 31, 147);
+}

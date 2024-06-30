@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainController">
+    <children>
+      <SplitPane fx:id="splitPane" dividerPositions="0.2" prefHeight="721.0" prefWidth="1282.0" style="-fx-cursor: default;" styleClass="my-split-pane" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane fx:id="sidebarPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 186, 228); -fx-border-color: rgb(255, 186, 228);" SplitPane.resizableWithParent="false">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="50.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="545.0">
+                     <image>
+                        <Image url="@images/journifylogo_transparent.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="homepageBtn" layoutX="13.0" layoutY="175.0" onAction="#goToHomePage" prefHeight="43.0" prefWidth="228.0" style="-fx-background-color: transparent;" styleClass="sidebar-button" text="Homepage">
+                     <font>
+                        <Font name="Segoe UI Bold" size="20.0" />
+                     </font></Button>
+                  <Button fx:id="createBtn" layoutX="13.0" layoutY="230.0" onAction="#goToCreate" prefHeight="43.0" prefWidth="228.0" style="-fx-background-color: transparent;" styleClass="sidebar-button" text="Create Itinerary">
+                     <font>
+                        <Font name="Segoe UI Bold" size="20.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="historyBtn" layoutX="13.0" layoutY="285.0" onAction="#goToHistory" prefHeight="43.0" prefWidth="228.0" style="-fx-background-color: transparent;" styleClass="sidebar-button" text="History">
+                     <font>
+                        <Font name="Segoe UI Bold" size="20.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="logoutBtn" layoutX="11.0" layoutY="651.0" onAction="#logoutBtn" prefHeight="43.0" prefWidth="228.0" style="-fx-background-color: transparent;" styleClass="sidebar-button" text="Logout">
+                     <font>
+                        <Font name="Segoe UI Bold" size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: white;">
+               <children>
+                  <TabPane fx:id="mainTabPane" prefHeight="722.0" prefWidth="1021.0" style="-fx-background-color: white;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab style="-fx-background-color: red;" text="Homepage">
+                           <content>
+                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+                                 <children>
+                                    <ScrollPane layoutX="23.0" layoutY="33.0" prefHeight="628.0" prefWidth="970.0" style="-fx-border-radius: 50;" stylesheets="@styles.css">
+                                       <content>
+                                          <AnchorPane fx:id="anchorHome" prefHeight="0.0" prefWidth="970.0">
+                                             <children>
+                                                <VBox fx:id="anchorHome1" alignment="TOP_CENTER" minHeight="200.0" prefHeight="200.0" prefWidth="966.0" spacing="20.0" style="-fx-background-color: white;" />
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                 </children></Pane>
+                           </content>
+                      </Tab>
+                        <Tab text="Show">
+                           <content>
+                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+                              <children>
+                                    <Pane fx:id="test" layoutX="23.0" layoutY="20.0" prefHeight="182.0" prefWidth="971.0" style="-fx-border-color: gray; -fx-border-radius: 10;">
+                                       <children>
+                                          <GridPane hgap="10.0" layoutX="23.0" layoutY="22.0" prefHeight="138.0" prefWidth="921.0" vgap="10.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label contentDisplay="CENTER" text="Date">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" text="Travel Name" GridPane.columnIndex="2">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" text="Starting Point" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" text="ETD(Departure)" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" text="Destination Point" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" text="ETA(Arrival)" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Segoe UI Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <DatePicker fx:id="calendarField1" disable="true" editable="false" prefHeight="28.8" prefWidth="223.2" GridPane.columnIndex="1" />
+                                                <TextField GridPane.columnIndex="3" />
+                                                <TextField fx:id="travelNameField1" editable="false" GridPane.columnIndex="3">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </TextField>
+                                                <TextField fx:id="startingField1" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </TextField>
+                                                <TextField fx:id="etdField1" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </TextField>
+                                                <TextField fx:id="destinationPointField1" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </TextField>
+                                                <TextField fx:id="etaField1" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </TextField>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </Pane>
+                                    <Button fx:id="savePhotoBtn" layoutX="830.0" layoutY="620.0" onAction="#savePhotos" prefHeight="32.0" prefWidth="152.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 50;" styleClass="sidebar-button" text="Save" textFill="WHITE">
+                                       <font>
+                                          <Font name="Segoe UI Bold" size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <ScrollPane layoutX="23.0" layoutY="220.0" minViewportWidth="971.0" prefHeight="380.0" prefViewportWidth="971.0" prefWidth="973.0" style="-fx-background-color: white;" stylesheets="@styles.css">
+                                      <content>
+                                        <AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="50.0" prefWidth="973.0">
+                                             <children>
+                                                <VBox layoutX="180.0" layoutY="76.0" minHeight="50.0" prefHeight="50.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                 </children></Pane>
+                           </content>
+                        </Tab>
+                      <Tab style="-fx-background-color: white;" text="Create">
+                           <content>
+                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+                                 <children>
+                                    <ScrollPane fx:id="scrollPaneContent" prefHeight="597.0" prefWidth="1023.0" style="-fx-background-color: white;" styleClass="myScrollPane" stylesheets="@styles.css">
+                                      <content>
+                                        <AnchorPane fx:id="anchorTest1" minHeight="0.0" minWidth="0.0" prefHeight="597.0" prefWidth="1010.0" style="-fx-background-color: white;">
+                                             <children>
+                                                <VBox fx:id="anchorTest" alignment="CENTER" layoutX="17.0" layoutY="230.4" prefHeight="209.0" prefWidth="971.0" spacing="10.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="230.0">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </VBox>
+                                                <Pane fx:id="test" layoutX="18.0" layoutY="20.0" prefHeight="182.0" prefWidth="971.0" style="-fx-border-color: gray; -fx-border-radius: 10;" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="21.200000000000045" AnchorPane.topAnchor="20.0">
+                                                   <children>
+                                                      <GridPane hgap="10.0" layoutX="23.0" layoutY="22.0" prefHeight="138.0" prefWidth="921.0" vgap="10.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" text="Date">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label contentDisplay="CENTER" text="Travel Name" GridPane.columnIndex="2">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label contentDisplay="CENTER" text="Starting Point" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label contentDisplay="CENTER" text="ETD(Departure)" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label contentDisplay="CENTER" text="Destination Point" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label contentDisplay="CENTER" text="ETA(Arrival)" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font name="Segoe UI Bold" size="15.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <DatePicker fx:id="calendarField" prefHeight="28.8" prefWidth="223.2" GridPane.columnIndex="1" />
+                                                            <TextField GridPane.columnIndex="3" />
+                                                            <TextField fx:id="travelNameField" GridPane.columnIndex="3">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="15.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="startingField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="15.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="etdField" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="15.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="destinationPointField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="15.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="etaField" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="15.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                      </GridPane>
+                                                   </children>
+                                                </Pane>
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                    <Button fx:id="saveBtn" layoutX="830.0" layoutY="620.0" onAction="#saveToDatabase" prefHeight="32.0" prefWidth="152.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 50;" styleClass="sidebar-button" text="Create" textFill="WHITE">
+                                       <font>
+                                          <Font name="Segoe UI Bold" size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="addDayBtn" layoutX="660.0" layoutY="620.0" onAction="#AddDayPanel" prefHeight="32.0" prefWidth="152.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 50;" styleClass="sidebar-button" text="Add Day" textFill="WHITE">
+                                       <font>
+                                          <Font name="Segoe UI Bold" size="18.0" />
+                                       </font>
+                                    </Button>
+                                 </children></Pane>
+                           </content>
+                      </Tab>
+                        <Tab text="History">
+                           <content>
+                              <Pane prefHeight="200.0" prefWidth="1030.0" style="-fx-background-color: white;" />
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <Pane prefHeight="40.0" prefWidth="1280.0" style="-fx-background-color: rgb( 224, 31, 147);" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="exit" layoutX="1242.0" layoutY="6.0" mnemonicParsing="false" onAction="#close_window" style="-fx-background-color: transparent;" text="X">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="sidepanelBtn" layoutY="-3.0" mnemonicParsing="false" onAction="#sideShower" style="-fx-background-color: transparent;" text="≡">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Button>
+         </children></Pane>
+    </children>
+</AnchorPane>
