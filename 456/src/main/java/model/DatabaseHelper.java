@@ -88,71 +88,85 @@ public class DatabaseHelper {
                      "day_id INTEGER, " +
                      "time TEXT, " +
                      "destination TEXT, " +
-                     "photo TEXT, " +  // Added photo column
+                     "photo TEXT, " +
                      "FOREIGN KEY(day_id) REFERENCES days(id))";
         executeStatement(sql);
     }
 
     // Insert a new itinerary and return its ID
-    public static int insertItinerary(String username, String travelName, String date, String startingLocation, String etd, String destination, String eta) throws SQLException {
-        String sql = "INSERT INTO itineraries(username, travel_name, date, starting_location, etd, destination, eta) VALUES(?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+    public static int insertItinerary(Connection conn, String username, String travelName, String itineraryDate, String startingLocation, String etd, String destination, String eta) throws SQLException {
+        String sql = "INSERT INTO itineraries (username, travel_name, date, starting_location, etd, destination, eta) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, travelName);
-            pstmt.setString(3, date);
+            pstmt.setString(3, itineraryDate);
             pstmt.setString(4, startingLocation);
             pstmt.setString(5, etd);
             pstmt.setString(6, destination);
             pstmt.setString(7, eta);
-
             pstmt.executeUpdate();
-
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
+            return getLastInsertId(conn);
         }
-        return -1;
     }
+    
 
     // Insert a new day into the days table
-    public static void insertDay(int itineraryId, int dayNumber) throws SQLException {
-        String sql = "INSERT INTO days(itinerary_id, day_number) VALUES(?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    public static void insertDay(Connection conn, int itineraryId, int dayNumber) throws SQLException {
+        String sql = "INSERT INTO days (itinerary_id, day_number) VALUES (?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, itineraryId);
             pstmt.setInt(2, dayNumber);
             pstmt.executeUpdate();
         }
-    }
+    }    
 
-    // Insert a new place into the places table
-    public static void insertPlace(int dayId, String time, String destination, String photo) throws SQLException {
+    public static void insertPlace(Connection conn, int dayId, String time, String destination, String photo) throws SQLException {
         String sql = "INSERT INTO places(day_id, time, destination, photo) VALUES(?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, dayId);
             pstmt.setString(2, time);
             pstmt.setString(3, destination);
             pstmt.setString(4, photo);
             pstmt.executeUpdate();
+            System.out.println("Place inserted successfully for dayId: " + dayId);
+        } catch (SQLException e) {
+            System.err.println("Failed to insert place: " + e.getMessage());
+            throw e; // Re-throw the exception to handle it in the calling method
         }
-    }
+    }    
 
     // Retrieve the last inserted ID
-    public static int getLastInsertId() throws SQLException {
+    public static int getLastInsertId(Connection conn) throws SQLException {
         String sql = "SELECT last_insert_rowid()";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             } else {
                 throw new SQLException("Failed to get the inserted ID.");
             }
+        }
+    }
+
+    public static void main(String[] args) {
+        try (Connection conn = getConnection()) {
+            // Inserting into 'itineraries'
+            insertItinerary(conn, "testUser", "Test Travel", "2024-06-30", "Test Start", "08:00 AM", "Test Destination", "06:00 PM");
+            int itineraryId = getLastInsertId(conn);
+            System.out.println("Last inserted itinerary_id: " + itineraryId);
+
+            // Inserting into 'days'
+            insertDay(conn, itineraryId, 1);
+            int dayId = getLastInsertId(conn);
+            System.out.println("Last inserted day_id: " + dayId);
+
+            // Inserting into 'places'
+            insertPlace(conn, dayId, "10:00 AM", "Sample Place", "sample_photo.jpg");
+            int placeId = getLastInsertId(conn);
+            System.out.println("Last inserted place_id: " + placeId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -284,5 +298,16 @@ public class DatabaseHelper {
             }
         }
         return null; // Return null if no itinerary found with the given travel name
+    }
+    public static Connection getConnection() throws SQLException {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(DB_URL);
+            System.out.println("Connection to SQLite has been established.");
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database: " + e.getMessage());
+            throw e; // Re-throw exception to be handled by the calling method
+        }
+        return connection;
     }
 }

@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import model.DatabaseHelper;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -236,13 +237,13 @@ public class MainController {
 
     @FXML
     private void saveToDatabase(ActionEvent event) {
-        try {
-            String travelName = "Travel Name";
-            String itineraryDate = "2024-06-30";
-            String startingLocation = "Starting Location";
-            String etd = "08:00 AM";
-            String destination = "Destination";
-            String eta = "06:00 PM";
+        try (Connection conn = DatabaseHelper.getConnection()) { // Get a connection
+            String travelName = travelNameField.getText().trim();
+            String itineraryDate = calendarField.getEditor().getText().trim();
+            String startingLocation = startingField.getText().trim();
+            String etd = etdField.getText().trim();
+            String destination = destinationPointField.getText().trim();
+            String eta = etaField.getText().trim();
 
             // Validate required fields
             if (travelName.isEmpty() || itineraryDate.isEmpty() || startingLocation.isEmpty() ||
@@ -252,13 +253,12 @@ public class MainController {
             }
 
             // Insert the itinerary into the database
-            int itineraryId = DatabaseHelper.insertItinerary(loggedInUsername, travelName, itineraryDate, startingLocation, etd, destination, eta);
+            int itineraryId = DatabaseHelper.insertItinerary(conn, loggedInUsername, travelName, itineraryDate, startingLocation, etd, destination, eta);
             if (itineraryId == -1) {
                 throw new SQLException("Failed to insert itinerary.");
             }
 
             List<VBox> dayPanelsContainers = addDayControllerInstance.getDayPanelsContainers();
-
             boolean dayAdded = false;
 
             for (VBox dayPanel : dayPanelsContainers) {
@@ -268,11 +268,11 @@ public class MainController {
                     continue;
                 }
                 String dayText = dayLabel.getText();
-
                 System.out.println("Processing Day: " + dayText);
 
-                DatabaseHelper.insertDay(itineraryId, Integer.parseInt(dayText.split(" ")[1]));
-                int dayId = DatabaseHelper.getLastInsertId();
+                // Insert day in the same connection context
+                DatabaseHelper.insertDay(conn, itineraryId, Integer.parseInt(dayText.split(" ")[1]));
+                int dayId = DatabaseHelper.getLastInsertId(conn);
 
                 VBox placesContainer = (VBox) dayPanel.lookup("#placesContainer");
                 if (placesContainer == null) {
@@ -294,7 +294,6 @@ public class MainController {
 
                     String placeTime = timeField.getText().trim();
                     String placeDestination = destinationField.getText().trim();
-
                     System.out.println("Place Time: " + placeTime + ", Destination: " + placeDestination);
 
                     if (placeTime.isEmpty()) {
@@ -304,7 +303,7 @@ public class MainController {
                         placeDestination = "Unknown Destination";
                     }
 
-                    DatabaseHelper.insertPlace(dayId, placeTime, placeDestination, "null");
+                    DatabaseHelper.insertPlace(conn, dayId, placeTime, placeDestination, null);
                     placeAdded = true;
                     timeField.clear();
                     destinationField.clear();
@@ -338,6 +337,8 @@ public class MainController {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     void close_window(ActionEvent event) {

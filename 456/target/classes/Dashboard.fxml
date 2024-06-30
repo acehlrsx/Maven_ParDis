@@ -158,9 +158,9 @@
                                     </Button>
                                     <ScrollPane layoutX="23.0" layoutY="220.0" minViewportWidth="971.0" prefHeight="380.0" prefViewportWidth="971.0" prefWidth="973.0" style="-fx-background-color: white;" stylesheets="@styles.css">
                                       <content>
-                                        <AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="50.0" prefWidth="973.0">
+                                        <AnchorPane fx:id="dayAnchor" minHeight="50.0" minWidth="0.0" prefHeight="50.0" prefWidth="973.0">
                                              <children>
-                                                <VBox layoutX="180.0" layoutY="76.0" minHeight="50.0" prefHeight="50.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <VBox fx:id="dayVbox" layoutX="180.0" layoutY="76.0" minHeight="50.0" prefHeight="50.0" prefWidth="973.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>
