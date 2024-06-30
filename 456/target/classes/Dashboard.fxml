@@ -226,7 +226,7 @@
                                                                   <Font name="Segoe UI Bold" size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <DatePicker fx:id="calendarField" prefHeight="28.8" prefWidth="223.2" GridPane.columnIndex="1" />
+                                                            <DatePicker fx:id="calendarField" editable="false" prefHeight="28.8" prefWidth="223.2" GridPane.columnIndex="1" />
                                                             <TextField GridPane.columnIndex="3" />
                                                             <TextField fx:id="travelNameField" GridPane.columnIndex="3">
                                                                <font>

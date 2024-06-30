@@ -2,22 +2,30 @@ package views;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 
 import design.RoundBorder;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -95,11 +103,6 @@ public class TravelController {
         for (Tab tab : mainTabPane.getTabs()) {
             if (tab.getText().equals("Show")) {
                 mainTabPane.getSelectionModel().select(tab);
-
-                Pane showTabContent = (Pane) tab.getContent();
-
-                System.out.println("dasasdasd" + showTabContent);
-                
                 break;
             }
         }
@@ -116,6 +119,46 @@ public class TravelController {
                     System.out.println("ETD: " + itineraryDetails.get(3));
                     System.out.println("Destination: " + itineraryDetails.get(4));
                     System.out.println("ETA: " + itineraryDetails.get(5));
+
+                    for (Tab tab : mainTabPane.getTabs()) {
+                        if (tab.getText().equals("Show")) {
+            
+                            Pane showTabContent = (Pane) tab.getContent();
+                            ObservableList<Node> children = showTabContent.getChildren();
+                            System.out.println("dasasdasd" + children);
+            
+                            for (Node node : children) {
+                                if (node instanceof Pane) {
+                                    Pane innerPane = (Pane) node;
+                                    ObservableList<Node> innerChildren = innerPane.getChildren();
+                                    for (Node innerNode : innerChildren) {
+                                        if (innerNode instanceof GridPane) {
+                                            GridPane gridPane = (GridPane) innerNode;
+                                            DatePicker calendarField1 = (DatePicker) gridPane.lookup("#calendarField1");
+                                            TextField travelNameField1 = (TextField) gridPane.lookup("#travelNameField1");
+                                            TextField startingField1 = (TextField) gridPane.lookup("#startingField1");
+                                            TextField etdField1 = (TextField) gridPane.lookup("#etdField1");
+                                            TextField destinationPointField1 = (TextField) gridPane.lookup("#destinationPointField1");
+                                            TextField etaField1 = (TextField) gridPane.lookup("#etaField1");
+
+                                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy");
+                                            LocalDate date = LocalDate.parse(itineraryDetails.get(1), formatter);
+                                            
+                                            calendarField1.setValue(date);
+                                            travelNameField1.setText(travelName);
+                                            startingField1.setText(itineraryDetails.get(2));
+                                            etdField1.setText(itineraryDetails.get(3));
+                                            destinationPointField1.setText(itineraryDetails.get(4));
+                                            etaField1.setText(itineraryDetails.get(5));
+            
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
                     // You can update UI components with these details
                 } else {
                     System.out.println("No itinerary found with the travel name: " + travelName);
