@@ -154,12 +154,9 @@ public class MainController {
 
     }
 
-    void loadTravelPanels() {
-        System.out.println("Start loading panels...");
-        
+    void loadTravelPanels() {        
         try {
             anchorHome1.getChildren().clear();
-            System.out.println("Cleared anchorHome1 children.");
             anchorHome.setPrefHeight(0);
             anchorHome1.setPrefHeight(628);
             anchorHome.setMinHeight(628);
@@ -175,10 +172,7 @@ public class MainController {
                 // Calculate the new height for the anchorHome1
                 double currentHeight = anchorHome.getPrefHeight();
 
-                System.out.println(currentHeight);
                 double newHeight = currentHeight + travelPanelsContainer.getPrefHeight() + 20;
-
-                System.out.println("new "  + newHeight);
         
                 // Ensure the minimum height of 628
                 if (newHeight < 628) {
@@ -188,7 +182,6 @@ public class MainController {
                 anchorHome.setPrefHeight(newHeight);
 
                 anchorHome1.getChildren().add(travelPanelsContainer);
-                System.out.println("Added travel panel for: " + travelName);
             }
         } catch (IOException e) {
             showAlert("Error", "Failed to load travel panels: " + e.getMessage(), Alert.AlertType.ERROR);

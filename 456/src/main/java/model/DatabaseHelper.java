@@ -148,28 +148,6 @@ public class DatabaseHelper {
         }
     }
 
-    public static void main(String[] args) {
-        try (Connection conn = getConnection()) {
-            // Inserting into 'itineraries'
-            insertItinerary(conn, "testUser", "Test Travel", "2024-06-30", "Test Start", "08:00 AM", "Test Destination", "06:00 PM");
-            int itineraryId = getLastInsertId(conn);
-            System.out.println("Last inserted itinerary_id: " + itineraryId);
-
-            // Inserting into 'days'
-            insertDay(conn, itineraryId, 1);
-            int dayId = getLastInsertId(conn);
-            System.out.println("Last inserted day_id: " + dayId);
-
-            // Inserting into 'places'
-            insertPlace(conn, dayId, "10:00 AM", "Sample Place", "sample_photo.jpg");
-            int placeId = getLastInsertId(conn);
-            System.out.println("Last inserted place_id: " + placeId);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     //Retrieve all itineraries for a specific user where done = 0 (not done)
     public static List<String> getNotDoneTravelNames(String username) {
         List<String> travelNames = new ArrayList<>();
@@ -309,5 +287,110 @@ public class DatabaseHelper {
             throw e; // Re-throw exception to be handled by the calling method
         }
         return connection;
+    }
+    public static int getDayId(int itineraryId, int dayNumber) throws SQLException {
+        String sql = "SELECT id FROM days WHERE itinerary_id = ? AND day_number = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, itineraryId);
+            pstmt.setInt(2, dayNumber);
+    
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new SQLException("Day not found for itinerary ID: " + itineraryId + " and day number: " + dayNumber);
+                }
+            }
+        }
+    }
+       
+    public static List<String> getDestinationsByTravelAndDay(String travelName, int dayNumber) throws SQLException {
+        List<String> destinations = new ArrayList<>();
+        String sql = "SELECT p.destination FROM places p " +
+                     "JOIN days d ON p.day_id = d.id " +
+                     "JOIN itineraries i ON d.itinerary_id = i.id " +
+                     "WHERE i.travel_name = ? AND d.day_number = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, travelName);
+            pstmt.setInt(2, dayNumber);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    destinations.add(rs.getString("destination"));
+                }
+            }
+        }
+        return destinations;
+    }
+    public static List<Integer> getDaysByTravelName(String travelName) throws SQLException {
+        List<Integer> daysList = new ArrayList<>();
+
+        String itineraryQuery = "SELECT id FROM itineraries WHERE travel_name = ?";
+        String daysQuery = "SELECT day_number FROM days WHERE itinerary_id = ?";
+        
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmtItinerary = conn.prepareStatement(itineraryQuery);
+             PreparedStatement pstmtDays = conn.prepareStatement(daysQuery)) {
+             
+            pstmtItinerary.setString(1, travelName);
+            
+            try (ResultSet rsItinerary = pstmtItinerary.executeQuery()) {
+                while (rsItinerary.next()) {
+                    int itineraryId = rsItinerary.getInt("id");
+                    
+                    pstmtDays.setInt(1, itineraryId);
+                    System.out.println(itineraryId);
+                    
+                    try (ResultSet rsDays = pstmtDays.executeQuery()) {
+                        while (rsDays.next()) {
+                            daysList.add(rsDays.getInt("day_number"));
+                        }
+                    }
+                }
+            }
+        }
+        return daysList;
+    }
+    public static void updatePhotoDetails(String placeName, String photoPath) throws SQLException {
+        String sql = "UPDATE places SET photo = ? WHERE destination = ?";
+        
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, photoPath);
+            pstmt.setString(2, placeName);
+    
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Photo details updated successfully for place: " + placeName);
+            } else {
+                System.out.println("Failed to update photo details for place: " + placeName);
+            }
+        }
+    }
+    public static int getItineraryIdByTravelName(String travelName) throws SQLException {
+        int itineraryId = -1;
+        String sql = "SELECT id FROM itineraries WHERE travel_name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, travelName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    itineraryId = rs.getInt("id");
+                }
+            }
+        }
+        return itineraryId;
+    }
+    
+    
+    public static void main(String[] args) {
+        try {
+            List<Integer> Days = DatabaseHelper.getDaysByTravelName("Test Travel");
+            System.out.println("Destinations: " + Days);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

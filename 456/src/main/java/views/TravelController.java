@@ -20,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -60,19 +61,16 @@ public class TravelController {
         Label travelNameLabel = (Label) travelPanelsContainer1.lookup("#travelName");
         String travelNameToDelete = travelNameLabel.getText();
 
-        // Remove the travel panel from UI
         anchorHome1.getChildren().remove(travelPanelsContainer1);
 
-        // Adjust heights
         double currentHeight = anchorHome1.getPrefHeight();
         double removedHeight = travelPanelsContainer1.getPrefHeight();
-        double newHeight = Math.max(currentHeight - removedHeight, 628); // Ensure minimum height
+        double newHeight = Math.max(currentHeight - removedHeight, 628);
 
         anchorHome.setPrefHeight(newHeight);
         anchorHome1.setPrefHeight(newHeight);
         travelPanelsContainer1.setPrefHeight(newHeight);
 
-        // Mark travel as done in the database
         boolean success = DatabaseHelper.markItineraryAsDone(travelNameToDelete);
         if (success) {
             showAlert("Success", "Travel marked as done successfully.", Alert.AlertType.INFORMATION);
@@ -111,7 +109,6 @@ public class TravelController {
             try {
                 List<String> itineraryDetails = DatabaseHelper.getItineraryByTravelName(travelName);
                 if (itineraryDetails != null) {
-                    // Display or process itinerary details as needed
                     System.out.println("Itinerary Details:");
                     System.out.println("Username: " + itineraryDetails.get(0));
                     System.out.println("Date: " + itineraryDetails.get(1));
@@ -155,18 +152,45 @@ public class TravelController {
                                         }
                                     }
                                 }
+                                if (node instanceof ScrollPane){
+                                    ScrollPane scrollPane = (ScrollPane) node;
+
+                                    Node scrollContent = scrollPane.getContent();
+                                    if (scrollContent instanceof Parent) {
+                                        Parent parent = (Parent) scrollContent;
+                                        ObservableList<Node> scrollChildren = parent.getChildrenUnmodifiable();
+                                        for (Node child : scrollChildren) {
+                                            if(child instanceof VBox){
+                                                VBox dayVBox = (VBox) child;
+                                                List<Integer> Days = DatabaseHelper.getDaysByTravelName("Test Travel");   
+                                                try {
+                                                    for (int day = 1; day <= Days.size(); day++) {
+                                                        System.out.println(day);
+                                                        List<String> placesPerDay = DatabaseHelper.getDestinationsByTravelAndDay("Test Travel",day);
+                                                        for (int i = 0; i < placesPerDay.size(); i++){
+                                                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/addPhoto.fxml"));
+                                                            HBox photoContainer = loader.load();
+                                                            TextField travField = (TextField) loader.getNamespace().get("photoDestinationField");
+                                                            travField.setText("Day " + day + " - " + placesPerDay.get(i));
+                                                            dayVBox.getChildren().add(photoContainer);
+                                                        }
+                                                    }
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }        
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             break;
                         }
                     }
-                    // You can update UI components with these details
                 } else {
                     System.out.println("No itinerary found with the travel name: " + travelName);
-                    // Handle case where no itinerary is found
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                // Handle database exception
             }
         });
     }
