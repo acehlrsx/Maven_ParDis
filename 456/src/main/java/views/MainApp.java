@@ -9,12 +9,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import design.RoundBorder;
+import model.DatabaseHelper;
 
 public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
+        DatabaseHelper.createTable();
+        DatabaseHelper.createItineraryTable();
+        DatabaseHelper.createDaysTable();
+        DatabaseHelper.createPlacesTable();
+        Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
 
         RoundBorder.setRoundedWindow(primaryStage, root);
         primaryStage.setTitle("Login");

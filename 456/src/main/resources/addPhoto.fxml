@@ -5,8 +5,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="photoContainer" minHeight="50.0" prefWidth="973.0" spacing="10" style="-fx-border-color: white; -fx-background-color: white; -fx-padding: 10;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.addPhotoController">
-    <TextField fx:id="photoDestinationField" editable="false" prefHeight="26.0" prefWidth="764.0" promptText="Enter your destination" />
+<HBox fx:id="photoContainer" alignment="CENTER" minHeight="50.0" prefHeight="68.0" prefWidth="959.0" spacing="10" style="-fx-border-color: gray; -fx-border-radius: 30; -fx-background-color: white; -fx-padding: 10;" styleClass="dark-prompt" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.addPhotoController">
+    <TextField fx:id="photoDestinationField" editable="false" maxWidth="350.0" minWidth="350.0" prefHeight="26.0" prefWidth="350.0" promptText="Destination" style="-fx-background-color: white;" />
+   <TextField fx:id="photoPathField" editable="false" maxWidth="350.0" minWidth="350.0" prefHeight="26.0" prefWidth="350.0" promptText="File Location" />
     <Button fx:id="uploadPlaceButton" minHeight="26.0" onAction="#uploadPlace" prefHeight="26.0" prefWidth="193.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 50;" text="Upload" textFill="WHITE">
       <font>
          <Font name="Segoe UI Bold" size="12.0" />

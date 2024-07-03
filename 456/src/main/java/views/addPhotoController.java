@@ -32,15 +32,20 @@ public class addPhotoController {
     @FXML
     private Button uploadPlaceButton;
 
-    private String selectedPhotoPath;
+    public MainController maincontrol = new MainController();
+
+    public String loggedInUsername;
+
+    public void setUsername(String username) {
+        loggedInUsername =  username;
+    }
 
     @FXML
     void uploadPlace(ActionEvent event) {
         Button uploadBtn = (Button) event.getSource();
+        HBox innerphotoContainer = (HBox) uploadBtn.getParent();
         Pane photoContainer = (Pane) uploadBtn.getParent().getParent().getParent().getParent().getParent().getParent().getParent();
-
-        System.out.println(photoContainer);
-
+        TextField photoPathField = (TextField) innerphotoContainer.lookup("#photoPathField");
         ObservableList<Node> Children = photoContainer.getChildren();
 
         for (Node innerChildren : Children) {
@@ -55,75 +60,53 @@ public class addPhotoController {
 
                         String destination = photoDestinationField.getText();
                         String[] parts = destination.split("-");
+                        String place = parts[1].trim();
                         String[] days = parts[0].split(" ");
                         int dayNumber = Integer.parseInt(days[1]);
 
-                        System.out.println(dayNumber);
+                        System.out.println(place);
 
-                        // try {
-                        //     int itineraryId = DatabaseHelper.getItineraryIdByTravelName(travelNameString);
-                        //     int dayId = DatabaseHelper.getDayId(itineraryId, dayNumber);
-                        // } catch (SQLException e) {
-                        //     e.printStackTrace();
-                        // }
+                        try {
+                            int itineraryId = DatabaseHelper.getItineraryIdByTravelName(loggedInUsername,travelNameString);
+                            int dayId = DatabaseHelper.getDayId(itineraryId, dayNumber);
+                            FileChooser fileChooser = new FileChooser();
+                            fileChooser.setTitle("Select Photo");
+
+                            FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter(
+                                "Image Files", "*.jpg", "*.jpeg", "*.png", "*.gif", "*.bmp"
+                            );
+                            fileChooser.getExtensionFilters().add(imageFilter);
+                            
+                            Path targetDirectory = Paths.get("Maven_ParDis/456/db/travelPhotos");
+                            File selectedFile = fileChooser.showOpenDialog(photoContainer.getScene().getWindow());
+
+                            if (selectedFile != null) {
+                                String originalPhotoPath = selectedFile.getAbsolutePath(); 
+                                photoPathField.setText(originalPhotoPath);
+
+                                String fileName = travelNameString + "-" + destination + "_" + selectedFile.getName();
+
+                                System.err.println(fileName);
+
+                                Path targetPath = targetDirectory.resolve(fileName); 
+                                String pathTarget = targetPath.toString();
+
+                                try {
+                                    DatabaseHelper.updatePhotoDetails(loggedInUsername,place, pathTarget, itineraryId, dayId);
+                                    Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING); 
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            
+                        } catch (SQLException | IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 }
             } 
             break;
         }
-
-
-        // FileChooser fileChooser = new FileChooser();
-        // fileChooser.setTitle("Select Photo to Upload");
-        // File selectedFile = fileChooser.showOpenDialog(new Stage()); // Show file chooser dialog
-
-        // if (selectedFile != null) {
-        //     try {
-        //         // Create a copy of the selected file
-        //         File copiedFile = copyPhoto(selectedFile);
-
-        //         // Check if copy was successful
-        //         if (copiedFile != null && copiedFile.exists()) {
-        //             // Update the database with the copied photo details
-        //             String destination = photoDestinationField.getText().trim();
-        //             String[] parts = destination.split("-");
-        //             String placeName = parts[1].trim();
-
-        //             System.out.println(placeName);
-        //             String photoPath = copiedFile.getAbsolutePath();
-
-        //             System.out.println(photoPath);
-
-        //             try {
-        //                 DatabaseHelper.updatePhotoDetails(placeName, photoPath);
-        //             } catch (SQLException e) {
-        //                 e.printStackTrace();
-        //             }
-        //         } else {
-        //             System.out.println("Failed to copy the photo.");
-        //         }
-        //     } catch (IOException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
-    }
-    private File copyPhoto(File originalFile) throws IOException {
-        // Define a directory for storing copied photos
-        Path targetDirectory = Paths.get("Maven_ParDis/456/db/travelPhotos"); // Replace with your desired directory path
-
-        // Create target directory if it doesn't exist
-        if (!Files.exists(targetDirectory)) {
-            Files.createDirectories(targetDirectory);
-        }
-
-        // Generate a unique file name for the copied photo
-        String fileName = "copied_photo_" + System.currentTimeMillis() + "_" + originalFile.getName();
-        Path copiedFilePath = targetDirectory.resolve(fileName);
-
-        // Perform the file copy operation
-        Files.copy(originalFile.toPath(), copiedFilePath, StandardCopyOption.REPLACE_EXISTING);
-
-        return copiedFilePath.toFile();
     }
 }

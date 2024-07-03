@@ -39,13 +39,6 @@ public class LoginController {
     @FXML
     private CheckBox show_check;
 
-
-    private MainController mainController;
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
     @FXML
     void LogBtnOnClicked(ActionEvent event) throws Exception{
         String username = log_user.getText();
@@ -55,12 +48,6 @@ public class LoginController {
             boolean loginSuccess = DatabaseHelper.authenticateUser(username, password);
 
             if (loginSuccess) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Login Successful");
-                alert.setHeaderText(null);
-                alert.setContentText("Welcome, " + username + "!");
-                alert.showAndWait();
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
                 Parent dashboardRoot = loader.load();
                 
@@ -70,7 +57,6 @@ public class LoginController {
                 Stage dashboardStage = new Stage();
                 RoundBorder.setRoundedWindow(dashboardStage, dashboardRoot);
                 dashboardStage.setTitle("Dashboard");
-                dashboardStage.setScene(new Scene(dashboardRoot));
                 dashboardStage.show();
 
                 ((Stage) log_button.getScene().getWindow()).close();
@@ -91,8 +77,6 @@ public class LoginController {
             alert.setContentText("An error occurred during login.");
             alert.showAndWait();
         }
-
-        ((Stage) log_button.getScene().getWindow()).close();
     }
     @FXML
     void goSignup(ActionEvent event)  throws Exception{

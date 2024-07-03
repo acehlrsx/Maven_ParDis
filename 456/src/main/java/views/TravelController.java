@@ -49,7 +49,9 @@ public class TravelController {
 
     private String travelNameText;
 
-    public MainController mainController;
+    public MainController mainController = new MainController();
+
+    public String loggedInUsername;
 
     @FXML
     void doneTravel(ActionEvent event) {
@@ -71,7 +73,7 @@ public class TravelController {
         anchorHome1.setPrefHeight(newHeight);
         travelPanelsContainer1.setPrefHeight(newHeight);
 
-        boolean success = DatabaseHelper.markItineraryAsDone(travelNameToDelete);
+        boolean success = DatabaseHelper.markItineraryAsDone(loggedInUsername, travelNameToDelete);
         if (success) {
             showAlert("Success", "Travel marked as done successfully.", Alert.AlertType.INFORMATION);
         } else {
@@ -87,15 +89,23 @@ public class TravelController {
         alert.showAndWait();
     }
 
+    public void setUsername(String username) {
+        loggedInUsername =  username;
+    }
+    public String getUsername() {
+        return loggedInUsername;
+    }
+
     @FXML
     void gotoShow(MouseEvent event) {
+        System.out.println(getUsername());
         HBox travelNameContain = (HBox) event.getSource();
         VBox anchorHome1 = (VBox) travelNameContain.getParent();
         TabPane mainTabPane= (TabPane) anchorHome1.getParent().getParent().getParent().getParent().getParent().getParent().getParent();
 
         System.out.println(mainTabPane);
         Label travelNameLabel = (Label) travelNameContain.lookup("#travelName");
-        String travelName = travelNameLabel.getText();
+        String travelName = travelNameLabel.getText().trim();
 
         System.out.println("tttttttttttttttttttttttttttttttttttttt" + travelName);
         for (Tab tab : mainTabPane.getTabs()) {
@@ -107,7 +117,7 @@ public class TravelController {
         Platform.runLater(() -> {
             System.out.println("Switching to Show tab");
             try {
-                List<String> itineraryDetails = DatabaseHelper.getItineraryByTravelName(travelName);
+                List<String> itineraryDetails = DatabaseHelper.getItineraryByTravelName(loggedInUsername,travelName);
                 if (itineraryDetails != null) {
                     System.out.println("Itinerary Details:");
                     System.out.println("Username: " + itineraryDetails.get(0));
@@ -156,24 +166,36 @@ public class TravelController {
                                     ScrollPane scrollPane = (ScrollPane) node;
 
                                     Node scrollContent = scrollPane.getContent();
-                                    if (scrollContent instanceof Parent) {
-                                        Parent parent = (Parent) scrollContent;
-                                        ObservableList<Node> scrollChildren = parent.getChildrenUnmodifiable();
+                                    if (scrollContent instanceof AnchorPane) {
+                                        AnchorPane parentAnchorPane = (AnchorPane) scrollContent;
+                                        ObservableList<Node> scrollChildren = parentAnchorPane.getChildren();
+
                                         for (Node child : scrollChildren) {
                                             if(child instanceof VBox){
                                                 VBox dayVBox = (VBox) child;
-                                                List<Integer> Days = DatabaseHelper.getDaysByTravelName("Test Travel");   
+                                                List<Integer> Days = DatabaseHelper.getDaysByTravelName(loggedInUsername, travelName);   
                                                 try {
                                                     for (int day = 1; day <= Days.size(); day++) {
                                                         System.out.println(day);
-                                                        List<String> placesPerDay = DatabaseHelper.getDestinationsByTravelAndDay("Test Travel",day);
+                                                        List<String> placesPerDay = DatabaseHelper.getDestinationsByTravelAndDay(loggedInUsername,travelName,day);
                                                         for (int i = 0; i < placesPerDay.size(); i++){
                                                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/addPhoto.fxml"));
                                                             HBox photoContainer = loader.load();
                                                             TextField travField = (TextField) loader.getNamespace().get("photoDestinationField");
                                                             travField.setText("Day " + day + " - " + placesPerDay.get(i));
+
+                                                            double currentHeight_dayBoc = dayVBox.getPrefHeight();
+
+                                                            double newHeight_dayVbox = currentHeight_dayBoc + photoContainer.getPrefHeight();
+
+                                                            if (newHeight_dayVbox < 380) {
+                                                                dayVBox.setPrefHeight(newHeight_dayVbox);
+                                                            }else{
+                                                                parentAnchorPane.setPrefHeight(newHeight_dayVbox);
+                                                                dayVBox.setPrefHeight(newHeight_dayVbox);
+                                                            }
                                                             dayVBox.getChildren().add(photoContainer);
-                                                        }
+                                                        }                                                       
                                                     }
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
@@ -232,31 +254,18 @@ public class TravelController {
             return;
         }
 
-        // try {
-        //     boolean deleted = DatabaseHelper.deleteItinerary(travelNameToDelete);
-        //     if (deleted) {
-        //         mainController.loadTravelPanels();;
-        //     } else {
-        //         System.out.println("Error");
-        //     }
-        // } catch (SQLException e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            boolean deleted = DatabaseHelper.deleteItinerary(travelNameToDelete);
+            if (deleted) {
+                mainController.loadTravelPanels();;
+            } else {
+                System.out.println("Error");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-
-    public HBox getTravelPanelsContainer() {
-        return travelPanelsContainer;
-    }
-
-    public void setTravelPanelsContainer(HBox travelPanelsContainer) {
-        this.travelPanelsContainer = travelPanelsContainer;
-    }
-
     public String getTravelName() {
         return travelNameText;
     }
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
 }

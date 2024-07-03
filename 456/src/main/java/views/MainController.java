@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.DatabaseHelper;
 
@@ -117,9 +118,18 @@ public class MainController {
     @FXML
     public TravelController travelControllerInstance;
 
+    @FXML
+    private Text usernameLabel;
+
+    @FXML
+    private VBox dayPanelsContainer;
+
+    @FXML
+
+    private addDayController addDayController;
+
     public void initialize() {
         addDayControllerInstance = new addDayController();
-        addPlaceControllerInstance = new addPlaceController();
         travelControllerInstance = new TravelController();
         loadTravelPanels();
     }
@@ -157,24 +167,21 @@ public class MainController {
     void loadTravelPanels() {        
         try {
             anchorHome1.getChildren().clear();
-            anchorHome.setPrefHeight(0);
             anchorHome1.setPrefHeight(628);
             anchorHome.setMinHeight(628);
         
             // Fetch travel names from the database
-            List<String> travelNames = DatabaseHelper.getNotDoneTravelNames("");         
+            List<String> travelNames = DatabaseHelper.getNotDoneTravelNames(loggedInUsername);         
             for (String travelName : travelNames) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/addTravel.fxml"));        
                 HBox travelPanelsContainer = loader.load();        
                 Label travelLabel = (Label) loader.getNamespace().get("travelName");
                 travelLabel.setText(travelName);
         
-                // Calculate the new height for the anchorHome1
                 double currentHeight = anchorHome.getPrefHeight();
 
                 double newHeight = currentHeight + travelPanelsContainer.getPrefHeight() + 20;
         
-                // Ensure the minimum height of 628
                 if (newHeight < 628) {
                     newHeight = newHeight;
                 }
@@ -218,19 +225,15 @@ public class MainController {
     private void logout() {
         loggedInUsername = null;
         showAlert("Logout", "You have been logged out.", Alert.AlertType.INFORMATION);
+        ((Stage) exit.getScene().getWindow()).close();
     }
 
     @FXML
-    private VBox dayPanelsContainer;
-
-    @FXML
-
-    private addDayController addDayController;
-    private addPlaceController addPlaceControllerInstance;
-
-    @FXML
     private void saveToDatabase(ActionEvent event) {
-        try (Connection conn = DatabaseHelper.getConnection()) { // Get a connection
+        try (Connection conn = DatabaseHelper.getConnection()) {
+            anchorTest.getChildren().clear();
+            boolean dayAdded = false;
+            boolean placeAdded = false;
             String travelName = travelNameField.getText().trim();
             String itineraryDate = calendarField.getEditor().getText().trim();
             String startingLocation = startingField.getText().trim();
@@ -238,22 +241,22 @@ public class MainController {
             String destination = destinationPointField.getText().trim();
             String eta = etaField.getText().trim();
 
-            // Validate required fields
             if (travelName.isEmpty() || itineraryDate.isEmpty() || startingLocation.isEmpty() ||
                 etd.isEmpty() || destination.isEmpty() || eta.isEmpty()) {
                 showAlert("Error", "Please fill in all required fields.", Alert.AlertType.ERROR);
                 return;
             }
+            if (dayAdded) {
+                showAlert("Error", "Please add at least one day save the itinerary.", Alert.AlertType.ERROR);
+                return;
+            }
 
-            // Insert the itinerary into the database
             int itineraryId = DatabaseHelper.insertItinerary(conn, loggedInUsername, travelName, itineraryDate, startingLocation, etd, destination, eta);
             if (itineraryId == -1) {
                 throw new SQLException("Failed to insert itinerary.");
             }
 
             List<VBox> dayPanelsContainers = addDayControllerInstance.getDayPanelsContainers();
-            boolean dayAdded = false;
-
             for (VBox dayPanel : dayPanelsContainers) {
                 Label dayLabel = (Label) dayPanel.lookup("#dayLabel");
                 if (dayLabel == null) {
@@ -263,7 +266,10 @@ public class MainController {
                 String dayText = dayLabel.getText();
                 System.out.println("Processing Day: " + dayText);
 
-                // Insert day in the same connection context
+                if (placeAdded) {
+                    showAlert("Error", "Please add one place to save the itinerary.", Alert.AlertType.ERROR);
+                    return;
+                }
                 DatabaseHelper.insertDay(conn, itineraryId, Integer.parseInt(dayText.split(" ")[1]));
                 int dayId = DatabaseHelper.getLastInsertId(conn);
 
@@ -272,8 +278,6 @@ public class MainController {
                     System.err.println("placesContainer is null in dayPanel: " + dayPanel);
                     continue;
                 }
-
-                boolean placeAdded = false;
 
                 for (int placeIndex = 0; placeIndex < placesContainer.getChildren().size(); placeIndex++) {
                     HBox placePanel = (HBox) placesContainer.getChildren().get(placeIndex);
@@ -301,18 +305,8 @@ public class MainController {
                     timeField.clear();
                     destinationField.clear();
                 }
-
-                if (placeAdded) {
-                    dayAdded = true;
-                }
             }
 
-            if (!dayAdded) {
-                showAlert("Error", "Please add at least one day and one place to save the itinerary.", Alert.AlertType.ERROR);
-                return;
-            }
-
-            // Clear fields after successful save
             travelNameField.clear();
             calendarField.getEditor().clear();
             startingField.clear();
@@ -320,7 +314,7 @@ public class MainController {
             destinationPointField.clear();
             etaField.clear();
 
-            reload();
+            goToHomePage(event);
 
             // Show success message
             showAlert("Save Successful", "Data saved to database successfully.", Alert.AlertType.INFORMATION);
@@ -330,8 +324,6 @@ public class MainController {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     void close_window(ActionEvent event) {
@@ -348,29 +340,13 @@ public class MainController {
 
     public void setUsername(String username) {
         loggedInUsername =  username;
+        usernameLabel.setText(username);
     }
-
-    public void reload(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
-            Parent dashboardRoot = loader.load();
-
-            MainController dashboardController = loader.getController();
-            dashboardController.setUsername(loggedInUsername);
-
-            Stage dashboardStage = new Stage();
-            dashboardStage.setTitle("Dashboard");
-            dashboardStage.setScene(new Scene(dashboardRoot));
-            dashboardStage.show();
-
-            ((Stage) createBtn.getScene().getWindow()).close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public String getUsername() {
+        return loggedInUsername;
     }
     @FXML
-    void savePhotos(ActionEvent event) {
+    void savePhotos(ActionEvent event){
 
     }
 

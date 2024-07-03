@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="rootPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: white; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainController">
     <children>
@@ -151,16 +152,11 @@
                                           </GridPane>
                                        </children>
                                     </Pane>
-                                    <Button fx:id="savePhotoBtn" layoutX="830.0" layoutY="620.0" onAction="#savePhotos" prefHeight="32.0" prefWidth="152.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 50;" styleClass="sidebar-button" text="Save" textFill="WHITE">
-                                       <font>
-                                          <Font name="Segoe UI Bold" size="18.0" />
-                                       </font>
-                                    </Button>
-                                    <ScrollPane layoutX="23.0" layoutY="220.0" minViewportWidth="971.0" prefHeight="380.0" prefViewportWidth="971.0" prefWidth="973.0" style="-fx-background-color: white;" stylesheets="@styles.css">
+                                    <ScrollPane layoutX="23.0" layoutY="220.0" minViewportWidth="973.0" prefHeight="380.0" prefViewportWidth="973.0" prefWidth="973.0" style="-fx-background-color: white;" stylesheets="@styles.css">
                                       <content>
-                                        <AnchorPane fx:id="dayAnchor" minHeight="50.0" minWidth="0.0" prefHeight="50.0" prefWidth="973.0">
+                                        <AnchorPane fx:id="dayAnchor" minHeight="380.0" minWidth="0.0" prefHeight="380.0" prefWidth="973.0" style="-fx-background-color: white;">
                                              <children>
-                                                <VBox fx:id="dayVbox" layoutX="180.0" layoutY="76.0" minHeight="50.0" prefHeight="50.0" prefWidth="973.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <VBox fx:id="dayVbox" layoutX="180.0" layoutY="76.0" maxWidth="960.0" minHeight="50.0" minWidth="960.0" prefHeight="50.0" prefWidth="960.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>
@@ -285,7 +281,7 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <Pane prefHeight="40.0" prefWidth="1280.0" style="-fx-background-color: rgb( 224, 31, 147);" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Pane prefHeight="40.0" prefWidth="1280.0" style="-fx-background-color: rgb( 224, 31, 147);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="exit" layoutX="1242.0" layoutY="6.0" mnemonicParsing="false" onAction="#close_window" style="-fx-background-color: transparent;" text="X">
                <font>
@@ -297,6 +293,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Button>
+            <Text fx:id="usernameLabel" layoutX="43.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
          </children></Pane>
     </children>
 </AnchorPane>

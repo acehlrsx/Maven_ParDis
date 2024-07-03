@@ -22,3 +22,13 @@
     -fx-background-radius: 20 20 0 0; /* top-left and top-right corners rounded */
     -fx-background-color: rgb(224, 31, 147);
 }
+.dark-prompt .text-field {
+    -fx-prompt-text-fill: #333; /* Dark gray color */
+}
+.stage {
+    -fx-background-color: transparent;
+}
+#rootPane {
+    -fx-background-color: white; /* Or any other color */
+    -fx-background-radius: 20;  /* Match the corner radius */
+}
