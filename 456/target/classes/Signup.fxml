@@ -67,7 +67,7 @@
                         <Font name="Segoe UI" size="18.0" />
                     </font>
                 </Text>
-            <TextField fx:id="sign_pass_shown" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0">
+            <TextField fx:id="sign_pass_shown" layoutX="201.0" layoutY="286.0" prefHeight="37.0" prefWidth="380.0" visible="false">
                <font>
                   <Font size="16.0" />
                </font>
@@ -81,7 +81,7 @@
                   <Font name="Segoe UI" size="18.0" />
                </font>
             </Text>
-            <TextField fx:id="sign_repass_shown" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0">
+            <TextField fx:id="sign_repass_shown" layoutX="201.0" layoutY="339.0" prefHeight="37.0" prefWidth="380.0" visible="false">
                <font>
                   <Font size="16.0" />
                </font>

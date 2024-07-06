@@ -30,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.DatabaseHelper;
 
@@ -56,6 +57,14 @@ public class TravelController {
     @FXML
     void doneTravel(ActionEvent event) {
         Button removeButton = (Button) event.getSource();
+
+        Scene scene = removeButton.getScene();
+        Parent rootPane = scene.getRoot();
+
+        Pane windowTab = (Pane) rootPane.lookup("#windowTab");
+        Text usernameLabel = (Text) windowTab.lookup("#usernameLabel");
+
+        loggedInUsername = usernameLabel.getText();
         HBox travelPanelsContainer1 = (HBox) removeButton.getParent();
         VBox anchorHome1 = (VBox) travelPanelsContainer1.getParent();
         AnchorPane anchorHome = (AnchorPane) anchorHome1.getParent();
@@ -74,6 +83,7 @@ public class TravelController {
         travelPanelsContainer1.setPrefHeight(newHeight);
 
         boolean success = DatabaseHelper.markItineraryAsDone(loggedInUsername, travelNameToDelete);
+        
         if (success) {
             showAlert("Success", "Travel marked as done successfully.", Alert.AlertType.INFORMATION);
         } else {
@@ -98,16 +108,20 @@ public class TravelController {
 
     @FXML
     void gotoShow(MouseEvent event) {
-        System.out.println(getUsername());
         HBox travelNameContain = (HBox) event.getSource();
+        Scene scene = travelNameContain.getScene();
+        Parent rootPane = scene.getRoot();
+
+        Pane windowTab = (Pane) rootPane.lookup("#windowTab");
+        Text usernameLabel = (Text) windowTab.lookup("#usernameLabel");
+
+        loggedInUsername = usernameLabel.getText();
+
         VBox anchorHome1 = (VBox) travelNameContain.getParent();
         TabPane mainTabPane= (TabPane) anchorHome1.getParent().getParent().getParent().getParent().getParent().getParent().getParent();
-
-        System.out.println(mainTabPane);
         Label travelNameLabel = (Label) travelNameContain.lookup("#travelName");
         String travelName = travelNameLabel.getText().trim();
 
-        System.out.println("tttttttttttttttttttttttttttttttttttttt" + travelName);
         for (Tab tab : mainTabPane.getTabs()) {
             if (tab.getText().equals("Show")) {
                 mainTabPane.getSelectionModel().select(tab);
@@ -122,10 +136,10 @@ public class TravelController {
                     System.out.println("Itinerary Details:");
                     System.out.println("Username: " + itineraryDetails.get(0));
                     System.out.println("Date: " + itineraryDetails.get(1));
-                    System.out.println("Starting Location: " + itineraryDetails.get(2));
-                    System.out.println("ETD: " + itineraryDetails.get(3));
-                    System.out.println("Destination: " + itineraryDetails.get(4));
-                    System.out.println("ETA: " + itineraryDetails.get(5));
+                    System.out.println("Starting Location: " + itineraryDetails.get(3));
+                    System.out.println("ETD: " + itineraryDetails.get(4));
+                    System.out.println("Destination: " + itineraryDetails.get(5));
+                    System.out.println("ETA: " + itineraryDetails.get(6));
 
                     for (Tab tab : mainTabPane.getTabs()) {
                         if (tab.getText().equals("Show")) {
@@ -148,15 +162,15 @@ public class TravelController {
                                             TextField destinationPointField1 = (TextField) gridPane.lookup("#destinationPointField1");
                                             TextField etaField1 = (TextField) gridPane.lookup("#etaField1");
 
-                                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy");
+                                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
                                             LocalDate date = LocalDate.parse(itineraryDetails.get(1), formatter);
                                             
                                             calendarField1.setValue(date);
                                             travelNameField1.setText(travelName);
-                                            startingField1.setText(itineraryDetails.get(2));
-                                            etdField1.setText(itineraryDetails.get(3));
-                                            destinationPointField1.setText(itineraryDetails.get(4));
-                                            etaField1.setText(itineraryDetails.get(5));
+                                            startingField1.setText(itineraryDetails.get(3));
+                                            etdField1.setText(itineraryDetails.get(4));
+                                            destinationPointField1.setText(itineraryDetails.get(5));
+                                            etaField1.setText(itineraryDetails.get(6));
             
                                             break;
                                         }
@@ -173,6 +187,7 @@ public class TravelController {
                                         for (Node child : scrollChildren) {
                                             if(child instanceof VBox){
                                                 VBox dayVBox = (VBox) child;
+                                                dayVBox.getChildren().clear();
                                                 List<Integer> Days = DatabaseHelper.getDaysByTravelName(loggedInUsername, travelName);   
                                                 try {
                                                     for (int day = 1; day <= Days.size(); day++) {
@@ -225,6 +240,13 @@ public class TravelController {
     @FXML
     void deleteItinerary(ActionEvent event) throws IOException {
         Button removeButton = (Button) event.getSource();
+        // Scene scene = removeButton.getScene();
+        // Parent rootPane = scene.getRoot();
+
+        // Pane windowTab = (Pane) rootPane.lookup("#windowTab");
+        // Text usernameLabel = (Text) windowTab.lookup("#usernameLabel");
+
+        // loggedInUsername = usernameLabel.getText();
         HBox travelPanelsContainer1 = (HBox) removeButton.getParent();
         VBox anchorHome1 = (VBox) travelPanelsContainer1.getParent();
         AnchorPane anchorHome = (AnchorPane) anchorHome1.getParent();

@@ -19,7 +19,7 @@ public class addDayController {
     @FXML
     private VBox placesContainer;
 
-    private static int dayCount = 0;
+    public int dayCount;
     private double initialY = 212;
     private double yIncrement = 200;
 
@@ -52,13 +52,20 @@ public class addDayController {
         addPlaceControllerInstance = new addPlaceController();
     }
 
+    public void setDayCount(int daycoun){
+        dayCount = daycoun;
+    }
+    public void clearAnchorTest(VBox anchorTest){
+        anchorTest.getChildren().clear();
+    }
+
     @FXML
     void AddPlace() {
         addPlaceControllerInstance.AddPlace(placesContainer);
     }
 
     @FXML
-    void removeDay(ActionEvent event) {
+    public void removeDay(ActionEvent event) {
         Button removeButton = (Button) event.getSource();
         VBox dayPanelContainer = (VBox) removeButton.getParent().getParent();
         VBox anchorPane = (VBox) dayPanelContainer.getParent();
@@ -67,7 +74,7 @@ public class addDayController {
         dayPanelsContainers.remove(dayPanelContainer);
     }
 
-    private void updateDayLabel(Label dayLabel) {
+    public void updateDayLabel(Label dayLabel) {
         dayCount++;
         dayLabel.setText("Day " + dayCount);
     }

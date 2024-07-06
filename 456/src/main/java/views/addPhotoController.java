@@ -4,12 +4,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -43,6 +46,15 @@ public class addPhotoController {
     @FXML
     void uploadPlace(ActionEvent event) {
         Button uploadBtn = (Button) event.getSource();
+
+        Scene scene = uploadBtn.getScene();
+        Parent rootPane = scene.getRoot();
+
+        Pane windowTab = (Pane) rootPane.lookup("#windowTab");
+        Text usernameLabel = (Text) windowTab.lookup("#usernameLabel");
+
+        loggedInUsername = usernameLabel.getText();
+
         HBox innerphotoContainer = (HBox) uploadBtn.getParent();
         Pane photoContainer = (Pane) uploadBtn.getParent().getParent().getParent().getParent().getParent().getParent().getParent();
         TextField photoPathField = (TextField) innerphotoContainer.lookup("#photoPathField");
@@ -64,11 +76,11 @@ public class addPhotoController {
                         String[] days = parts[0].split(" ");
                         int dayNumber = Integer.parseInt(days[1]);
 
-                        System.out.println(place);
-
                         try {
                             int itineraryId = DatabaseHelper.getItineraryIdByTravelName(loggedInUsername,travelNameString);
                             int dayId = DatabaseHelper.getDayId(itineraryId, dayNumber);
+                            System.out.println("ITI " +  itineraryId);
+                            System.out.println("DAY " +  dayId);
                             FileChooser fileChooser = new FileChooser();
                             fileChooser.setTitle("Select Photo");
 
@@ -77,7 +89,7 @@ public class addPhotoController {
                             );
                             fileChooser.getExtensionFilters().add(imageFilter);
                             
-                            Path targetDirectory = Paths.get("Maven_ParDis/456/db/travelPhotos");
+                            Path targetDirectory = Paths.get("Maven_ParDis/456/src/main/resources/travelPhotos");
                             File selectedFile = fileChooser.showOpenDialog(photoContainer.getScene().getWindow());
 
                             if (selectedFile != null) {

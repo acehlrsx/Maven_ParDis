@@ -1,15 +1,15 @@
 package views;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -28,13 +28,8 @@ import model.DatabaseHelper;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.stream.events.Comment;
-
-import design.RoundBorder;
-import views.addDayController;
+import java.util.stream.IntStream;
 
 public class MainController {
 
@@ -125,14 +120,71 @@ public class MainController {
     private VBox dayPanelsContainer;
 
     @FXML
+    private ComboBox<String> etaAMPM;
 
+    @FXML
+    private TextField etaField1;
+
+    @FXML
+    private ComboBox<String> etaHour;
+
+    @FXML
+    private ComboBox<String> etaMin;
+
+    @FXML
+    private ComboBox<String> etdAMPM;
+
+    @FXML
+    private TextField etdField1;
+
+    @FXML
+    private ComboBox<String> etdHour;
+
+    @FXML
+    private ComboBox<String> etdMin;
+
+    @FXML
     private addDayController addDayController;
+
+    @FXML
+    private AnchorPane galleryHome;
+
+    @FXML
+    private VBox galleryHome1;
+
+    ObservableList<String> optionsHour = FXCollections.observableArrayList(
+        IntStream.range(1, 13)
+             .mapToObj(i -> String.format("%02d", i))
+             .toArray(String[]::new)
+    );
+
+    ObservableList<String> optionsMin = FXCollections.observableArrayList(
+    IntStream.range(0, 60)
+             .mapToObj(i -> String.format("%02d", i))
+             .toArray(String[]::new)
+    );
+
+    ObservableList<String> optionsAMPM = FXCollections.observableArrayList(
+        "AM", "PM"
+    );
 
     public void initialize() {
         addDayControllerInstance = new addDayController();
         travelControllerInstance = new TravelController();
-        loadTravelPanels();
+        etdHour.setItems(optionsHour);
+        etdMin.setItems(optionsMin);
+        etdAMPM.setItems(optionsAMPM);
+        etaHour.setItems(optionsHour);
+        etaMin.setItems(optionsMin);
+        etaAMPM.setItems(optionsAMPM);
+        etdHour.getSelectionModel().select("01");
+        etdMin.getSelectionModel().select("00");
+        etdAMPM.getSelectionModel().select("AM");
+        etaHour.getSelectionModel().select("01");
+        etaMin.getSelectionModel().select("00");
+        etaAMPM.getSelectionModel().select("AM");
     }
+    
 
     void gotoShow(){
         selectTab("Show");
@@ -141,11 +193,14 @@ public class MainController {
     @FXML
     void goToCreate(ActionEvent event) {
         selectTab("Create");
+        addDayControllerInstance.setDayCount(0);
+        addDayControllerInstance.clearAnchorTest(anchorTest);
     }
 
     @FXML
     void goToHistory(ActionEvent event) {
         selectTab("History");
+        loadDoneTravels();
     }
 
     @FXML
@@ -170,7 +225,6 @@ public class MainController {
             anchorHome1.setPrefHeight(628);
             anchorHome.setMinHeight(628);
         
-            // Fetch travel names from the database
             List<String> travelNames = DatabaseHelper.getNotDoneTravelNames(loggedInUsername);         
             for (String travelName : travelNames) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/addTravel.fxml"));        
@@ -198,6 +252,40 @@ public class MainController {
         
         System.out.println("Finished loading panels.");
     }
+
+    void loadDoneTravels() {        
+        try {
+            galleryHome1.getChildren().clear();
+            galleryHome1.setPrefHeight(628);
+            galleryHome.setMinHeight(628);
+        
+            List<String> travelNamesDone = DatabaseHelper.getDoneTravelNames(loggedInUsername);   
+            for (String travelNameDone : travelNamesDone) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/addHistory.fxml"));        
+                HBox historyPanelContainer = loader.load();      
+
+                Label travelHistory = (Label) loader.getNamespace().get("travelHistory");
+                travelHistory.setText(travelNameDone);
+        
+                double currentHeight = galleryHome.getPrefHeight();
+
+                double newHeight = currentHeight + historyPanelContainer.getPrefHeight() + 20;
+        
+                if (newHeight < 628) {
+                    newHeight = newHeight;
+                }
+                galleryHome1.setPrefHeight(newHeight);
+                galleryHome.setPrefHeight(newHeight);
+
+                galleryHome1.getChildren().add(historyPanelContainer);
+            }
+        } catch (IOException e) {
+            showAlert("Error", "Failed to load travel panels: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
+        }
+        System.out.println("Finished loading panels.");
+    }
         
 
     @FXML
@@ -217,9 +305,6 @@ public class MainController {
                 break;
             }
         }
-        Platform.runLater(() -> {
-        System.out.println("Switching to " + tabText + " tab");
-    });
     }
 
     private void logout() {
@@ -228,26 +313,40 @@ public class MainController {
         ((Stage) exit.getScene().getWindow()).close();
     }
 
+    int day = 1;
     @FXML
     private void saveToDatabase(ActionEvent event) {
         try (Connection conn = DatabaseHelper.getConnection()) {
             anchorTest.getChildren().clear();
-            boolean dayAdded = false;
-            boolean placeAdded = false;
+
+            String etdHouString = etdHour.getValue();
+            String etdMinString = etdMin.getValue();
+            String etdAMPMString = etdAMPM.getValue();
+
+            String etaHourString = etaHour.getValue();
+            String etaMinString = etaMin.getValue();
+            String etaAMPMString = etaAMPM.getValue();
+            
             String travelName = travelNameField.getText().trim();
             String itineraryDate = calendarField.getEditor().getText().trim();
             String startingLocation = startingField.getText().trim();
-            String etd = etdField.getText().trim();
+            String etd = etdHouString + ":" + etdMinString + etdAMPMString;
             String destination = destinationPointField.getText().trim();
-            String eta = etaField.getText().trim();
+            String eta = etaHourString + ":" + etaMinString + etaAMPMString;
 
-            if (travelName.isEmpty() || itineraryDate.isEmpty() || startingLocation.isEmpty() ||
-                etd.isEmpty() || destination.isEmpty() || eta.isEmpty()) {
+            if (travelName.isEmpty() || itineraryDate.isEmpty() || startingLocation.isEmpty() || etd.isEmpty() || destination.isEmpty() || eta.isEmpty()) {
                 showAlert("Error", "Please fill in all required fields.", Alert.AlertType.ERROR);
                 return;
             }
-            if (dayAdded) {
-                showAlert("Error", "Please add at least one day save the itinerary.", Alert.AlertType.ERROR);
+
+            List<VBox> dayPanelsContainers = addDayControllerInstance.getDayPanelsContainers();
+            if (dayPanelsContainers.isEmpty()) {
+                showAlert("Error", "Please add at least one day to your itinerary.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (!itineraryDate.matches("\\d{1,2}/\\d{1,2}/\\d{4}")) {
+                showAlert("Error", "Invalid date format. Please use M/d/yyyy.", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -256,7 +355,8 @@ public class MainController {
                 throw new SQLException("Failed to insert itinerary.");
             }
 
-            List<VBox> dayPanelsContainers = addDayControllerInstance.getDayPanelsContainers();
+            boolean hasValidDay = false;
+
             for (VBox dayPanel : dayPanelsContainers) {
                 Label dayLabel = (Label) dayPanel.lookup("#dayLabel");
                 if (dayLabel == null) {
@@ -264,66 +364,78 @@ public class MainController {
                     continue;
                 }
                 String dayText = dayLabel.getText();
-                System.out.println("Processing Day: " + dayText);
 
-                if (placeAdded) {
-                    showAlert("Error", "Please add one place to save the itinerary.", Alert.AlertType.ERROR);
-                    return;
-                }
+                boolean placeAdded = false;
                 DatabaseHelper.insertDay(conn, itineraryId, Integer.parseInt(dayText.split(" ")[1]));
                 int dayId = DatabaseHelper.getLastInsertId(conn);
 
                 VBox placesContainer = (VBox) dayPanel.lookup("#placesContainer");
                 if (placesContainer == null) {
                     System.err.println("placesContainer is null in dayPanel: " + dayPanel);
-                    continue;
+                    return; 
                 }
 
-                for (int placeIndex = 0; placeIndex < placesContainer.getChildren().size(); placeIndex++) {
-                    HBox placePanel = (HBox) placesContainer.getChildren().get(placeIndex);
-                    TextField timeField = (TextField) placePanel.lookup("#placeTimeField");
-                    TextField destinationField = (TextField) placePanel.lookup("#placeDestinationField");
-
-                    if (timeField == null || destinationField == null) {
-                        System.err.println("placeTimeField or placeDestinationField is null in placePanel: " + placePanel);
-                        continue;
-                    }
-
-                    String placeTime = timeField.getText().trim();
-                    String placeDestination = destinationField.getText().trim();
-                    System.out.println("Place Time: " + placeTime + ", Destination: " + placeDestination);
-
-                    if (placeTime.isEmpty()) {
-                        placeTime = "Unknown Time";
-                    }
-                    if (placeDestination.isEmpty()) {
-                        placeDestination = "Unknown Destination";
-                    }
-
-                    DatabaseHelper.insertPlace(conn, dayId, placeTime, placeDestination, null);
-                    placeAdded = true;
-                    timeField.clear();
-                    destinationField.clear();
+                if (placesContainer.getChildren().isEmpty()) {
+                    showAlert("Error", "Please add at least one place for Day " + dayText, Alert.AlertType.ERROR);
+                    return;
                 }
+                for (Node placeNode : placesContainer.getChildren()) {
+                    if (placeNode instanceof HBox) {
+                        HBox placePanel = (HBox) placeNode;
+
+                        ComboBox<String> comHour = (ComboBox<String>) placePanel.lookup("#placeHour");
+                        ComboBox<String> comMin = (ComboBox<String>) placePanel.lookup("#placeMin");
+                        ComboBox<String> comAMPM = (ComboBox<String>) placePanel.lookup("#placeAMPM");
+
+                        String hourPlace = comHour.getValue();
+                        String minPlace = comMin.getValue();
+                        String AMPMPlace = comAMPM.getValue();
+
+                        TextField destinationField = (TextField) placePanel.lookup("#placeDestinationField");
+                        String placeTime = hourPlace + ":" + minPlace + AMPMPlace;
+                        String placeDestination = destinationField.getText().trim();
+
+                        // Input Validation (Modified for placeTime)
+                        if (placeTime == null || placeTime.isEmpty()) {
+                            placeTime = "Unknown Time";
+                        }
+                        if (placeDestination.isEmpty()) {
+                            placeDestination = "Unknown Destination";
+                        }
+
+                        DatabaseHelper.insertPlace(conn, dayId, placeTime, placeDestination, null);
+                        placeAdded = true;
+                        hasValidDay = true; 
+                    }
+                }
+
+                if (!placeAdded) {
+                    showAlert("Error", "Please add at least one place for Day " + dayText, Alert.AlertType.ERROR);
+                    DatabaseHelper.deleteDayById(conn, dayId);
+                    return;
+                }
+            }
+            
+            if (!hasValidDay) {
+                showAlert("Error", "Please add at least one day with one place to your itinerary.", Alert.AlertType.ERROR);
+                DatabaseHelper.deleteItineraryById(conn, itineraryId);
+                return;
             }
 
             travelNameField.clear();
             calendarField.getEditor().clear();
             startingField.clear();
-            etdField.clear();
             destinationPointField.clear();
-            etaField.clear();
 
             goToHomePage(event);
 
-            // Show success message
             showAlert("Save Successful", "Data saved to database successfully.", Alert.AlertType.INFORMATION);
         } catch (SQLException e) {
-            // Handle any SQL exceptions
             showAlert("Error", "Failed to save data to database: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
+
 
     @FXML
     void close_window(ActionEvent event) {
@@ -341,13 +453,12 @@ public class MainController {
     public void setUsername(String username) {
         loggedInUsername =  username;
         usernameLabel.setText(username);
+        loadTravelPanels();
     }
     public String getUsername() {
         return loggedInUsername;
     }
     @FXML
     void savePhotos(ActionEvent event){
-
     }
-
 }

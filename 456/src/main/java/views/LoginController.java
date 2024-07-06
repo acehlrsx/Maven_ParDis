@@ -94,10 +94,12 @@ public class LoginController {
     void handleShowPassword_in_Log(ActionEvent event) {
         if (show_check.isSelected()) {
             log_pass_shown.setText(log_pass_hidden.getText());
+            log_pass_hidden.setText(log_pass_shown.getText());
             log_pass_shown.setVisible(true);
             log_pass_hidden.setVisible(false);
         } else {
             log_pass_hidden.setText(log_pass_shown.getText());
+            log_pass_shown.setText(log_pass_hidden.getText());
             log_pass_hidden.setVisible(true);
             log_pass_shown.setVisible(false);
         }

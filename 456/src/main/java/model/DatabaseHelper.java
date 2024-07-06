@@ -144,7 +144,7 @@ public class DatabaseHelper {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
-            pstmt.setInt(2, 0); // 0 means not done
+            pstmt.setInt(2, 0);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -217,11 +217,14 @@ public class DatabaseHelper {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
     
+            System.out.println("Marking itinerary as done for username: " + username + ", travelName: " + travelName); // Log input values
+
             pstmt.setBoolean(1, true);
             pstmt.setString(2, travelName);
             pstmt.setString(3, username);
     
             int rowsUpdated = pstmt.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated); // Log result
             return rowsUpdated > 0;
     
         } catch (SQLException e) {
@@ -258,13 +261,24 @@ public class DatabaseHelper {
             pstmt.setString(2, username);
     
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return itineraryDetails;
+                if (rs.next()) { // Check if a row was found
+                    itineraryDetails.add(rs.getString("username"));
+                    itineraryDetails.add(rs.getString("date"));
+                    itineraryDetails.add(rs.getString("travel_name"));
+                    itineraryDetails.add(rs.getString("starting_location"));
+                    itineraryDetails.add(rs.getString("etd"));
+                    itineraryDetails.add(rs.getString("destination"));
+                    itineraryDetails.add(rs.getString("eta"));
                 }
             }
         }
-        return null;
+            if (itineraryDetails.isEmpty()) {
+            System.out.println("No itinerary found for " + username + " with travel name: " + travelName);
+        }
+    
+        return itineraryDetails;
     }
+    
     public static Connection getConnection() throws SQLException {
         Connection connection = null;
         try {
@@ -345,30 +359,26 @@ public class DatabaseHelper {
         return daysList;
     }
     public static void updatePhotoDetails(String username, String placeName, String photoPath, int itineraryId, int dayId) throws SQLException {
-        String sql = "UPDATE places p " +
-                     "INNER JOIN days d ON p.day_id = d.id " +
-                     "INNER JOIN itineraries i ON d.itinerary_id = i.id " + // Join with itineraries
-                     "SET p.photo = ? " +
-                     "WHERE p.destination = ? AND d.day_number = ? AND d.itinerary_id = ? " +
-                     "AND i.username = ?"; // Add username condition
-    
+        String sql = "UPDATE places " +
+                 "SET photo = ? " +
+                 "WHERE destination = ? AND day_id = ?"; // Filter directly by day_id
+
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, photoPath);
             pstmt.setString(2, placeName);
-            pstmt.setInt(3, dayId);
-            pstmt.setInt(4, itineraryId);
-            pstmt.setString(5, username); // Set username parameter
-    
+            pstmt.setInt(3, dayId); 
+
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Photo details updated successfully for place: " + placeName);
             } else {
-                throw new SQLException("No matching place found in the user's itinerary for the given day."); 
+                throw new SQLException("No matching place found in the user's itinerary for the given day.");
             }
-        } 
+        }
     }
+    
     
     
     
@@ -394,7 +404,70 @@ public class DatabaseHelper {
             throw e; // Re-throw the exception for handling elsewhere
         }
     }
+    public static List<String> getDoneTravelNames(String username) {
+        List<String> travelNames = new ArrayList<>();
+        String sql = "SELECT travel_name FROM itineraries WHERE username = ? AND done = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setInt(2, 1);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    travelNames.add(rs.getString("travel_name"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return travelNames;
+    }
+    public static String getPhotoPath(String username, String placeName, int dayNumber, int itineraryId) throws SQLException {
+        String sql = "SELECT photo FROM places " +
+                     "WHERE destination = ? AND day_id = ( " +
+                     "    SELECT id FROM days " +
+                     "    WHERE day_number = ? AND itinerary_id = ( " +
+                     "        SELECT id FROM itineraries " +
+                     "        WHERE username = ? AND id = ? " +
+                     "    )" +
+                     ")"; 
+    
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            pstmt.setString(1, placeName);
+            pstmt.setInt(2, dayNumber);
+            pstmt.setString(3, username);
+            pstmt.setInt(4, itineraryId);
+    
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("photo");
+                } else {
+                    return null; // Or throw an exception if you want to handle the case differently
+                }
+            }
+        }
+    }
+    public static void deleteItineraryById(Connection conn, int itineraryId) throws SQLException {
+        String sql = "DELETE FROM itineraries WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, itineraryId);
+            pstmt.executeUpdate();
+        }
+    }
+    public static void deleteDayById(Connection conn, int dayId) throws SQLException {
+        String sql = "DELETE FROM days WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, dayId);
+            pstmt.executeUpdate();
+        }
+    }
     public static void main(String[] args) {
-        
+        String fullPath = "Maven_ParDis/456/src/main/resources/travelPhotos/example.png";
+        int index = fullPath.lastIndexOf("resources") + "resources".length(); // Find the index after "resources/"
+        String relativePath = fullPath.substring(index); // Extract the substring after "resources/"
+
+        System.out.println(relativePath);
     }
 }

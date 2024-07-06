@@ -12,12 +12,12 @@
             <Font name="Segoe UI Bold" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="deleteItineraryBtn" mnemonicParsing="false" onAction="#deleteItinerary" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #FCAB4E; -fx-background-radius: 30 0 0 30;" text="Delete" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="deleteItineraryBtn" maxWidth="140.0" minWidth="140.0" mnemonicParsing="false" onAction="#deleteItinerary" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #FCAB4E; -fx-background-radius: 30 0 0 30;" text="Delete" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="doneBtn" mnemonicParsing="false" onAction="#doneTravel" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 0 30 30 0;" text="Done" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="doneBtn" maxWidth="140.0" minWidth="140.0" mnemonicParsing="false" onAction="#doneTravel" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: rgb( 224, 31, 147); -fx-background-radius: 0 30 30 0;" text="Done" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="15.0" />
          </font>

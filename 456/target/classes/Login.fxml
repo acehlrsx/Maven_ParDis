@@ -52,7 +52,7 @@
                <font>
                   <Font size="16.0" />
                </font></TextField>
-            <TextField fx:id="log_pass_shown" layoutX="175.0" layoutY="226.0" prefHeight="37.0" prefWidth="380.0">
+            <TextField fx:id="log_pass_shown" layoutX="175.0" layoutY="226.0" prefHeight="37.0" prefWidth="380.0" visible="false">
                <font>
                   <Font size="16.0" />
                </font>

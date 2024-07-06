@@ -95,9 +95,12 @@ public class SignupController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
         Parent signUpRoot = loader.load();
 
+        MainController dashboardController = loader.getController();
+        dashboardController.setUsername(username);
+
         Stage signUpStage = new Stage(); 
         RoundBorder.setRoundedWindow(signUpStage, signUpRoot);
-        signUpStage.setTitle("Login");
+        signUpStage.setTitle("Dasboard");
         signUpStage.show();
 
         ((Stage) sign_log.getScene().getWindow()).close();
@@ -119,18 +122,22 @@ public class SignupController {
     void handleShowPassword_in_Signup(ActionEvent event) {
         if (sign_check.isSelected()) {
             sign_pass_shown.setText(sign_pass_hidden.getText());
+            sign_pass_hidden.setText(sign_pass_shown.getText());
             sign_pass_shown.setVisible(true);
             sign_pass_hidden.setVisible(false);
 
             sign_repass_shown.setText(sign_repass_hidden.getText());
+            sign_repass_hidden.setText(sign_repass_shown.getText());
             sign_repass_shown.setVisible(true);
             sign_repass_hidden.setVisible(false);
         } else {
             sign_pass_hidden.setText(sign_pass_shown.getText());
+            sign_pass_shown.setText(sign_pass_hidden.getText());
             sign_pass_hidden.setVisible(true);
             sign_pass_shown.setVisible(false);
 
             sign_repass_hidden.setText(sign_repass_shown.getText());
+            sign_repass_shown.setText(sign_repass_hidden.getText());
             sign_repass_hidden.setVisible(true);
             sign_repass_shown.setVisible(false);
         }

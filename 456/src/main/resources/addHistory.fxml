@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="historyPanelContainer" alignment="CENTER_RIGHT" minHeight="92.0" onMouseClicked="#gotoShow" prefHeight="92.0" prefWidth="908.0" style="-fx-border-color: gray; -fx-border-radius: 30; -fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.HistoryController">
+   <children>
+      <Label fx:id="travelHistory" alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="719.0" text="Travel Name" textAlignment="CENTER">
+         <font>
+            <Font name="Segoe UI Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="viewGalleryBtn" maxWidth="280.0" minWidth="280.0" mnemonicParsing="false" onAction="#viewGallery" prefHeight="140.0" prefWidth="280.0" style="-fx-background-color: rgb(119,221,119); -fx-background-radius: 30 30 30 30;" text="View" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</HBox>
