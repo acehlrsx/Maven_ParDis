@@ -487,7 +487,7 @@ public class DatabaseHelper {
         String sql = "SELECT p.destination " +
                 "FROM places p " +
                 "JOIN days d ON p.day_id = d.id " +
-                "WHERE d.day_number = ? AND d.itinerary_id = ?"; // Use itinerary_id directly
+                "WHERE d.day_number = ? AND d.itinerary_id = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, dayNumber);
@@ -501,6 +501,26 @@ public class DatabaseHelper {
         }
         return destinations;
     }
+    public static List<String> getDestinationsAndTimeByTravelAndDay(int itineraryId, int dayNumber) throws SQLException {
+        List<String> destinations = new ArrayList<>();
+        String sql = "SELECT p.destination, p.time " +
+                "FROM places p " +
+                "JOIN days d ON p.day_id = d.id " +
+                "WHERE d.day_number = ? AND d.itinerary_id = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, dayNumber);
+            pstmt.setInt(2, itineraryId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    destinations.add(rs.getString("destination"));
+                    destinations.add(rs.getString("time"));
+                }
+            }
+        }
+        return destinations;
+    }
 
     public static String generateItineraryPaper(int itineraryId) throws SQLException {
         List<String> itineraryDetails = DatabaseHelper.getItineraryById(itineraryId);
@@ -509,40 +529,46 @@ public class DatabaseHelper {
         StringBuilder itineraryPaper = new StringBuilder();
         itineraryPaper.append("<html><head>");
         itineraryPaper.append("<style>");
-        itineraryPaper.append("body { font-family: sans-serif; margin: 20px; }");
-        itineraryPaper.append("h1 { color: #333; text-align: center; }");
-        itineraryPaper.append("h2 { color: #555; margin-top: 30px; }");
-        itineraryPaper.append(".day-container { border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-bottom: 20px; background-color: #f5f5f5; }");
+        itineraryPaper.append("body { font-family: sans-serif; margin: 20px; justify-content: center; display: flex; }");
+        itineraryPaper.append(".mainContainer { width: 520px; border: 1px solid black; padding: 20px; }");
+        itineraryPaper.append("h1 { color: #333; text-align: center; background-color:  rgb( 224, 31, 147); padding: 10px; border-radius: 10px; }");
+        itineraryPaper.append("h2 { color: #000; }");
+        itineraryPaper.append(".day-container { border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-bottom: 20px; background-color:  rgb(255, 186, 228); }");
         itineraryPaper.append("ul { list-style: none; padding: 0; }");
         itineraryPaper.append("li { margin-bottom: 10px; }");
         itineraryPaper.append("</style>");
         itineraryPaper.append("</head><body>");
+        itineraryPaper.append("<div class='mainContainer'>");
         itineraryPaper.append("<h1>").append(itineraryDetails.get(6)).append("'s Itinerary</h1>");
         itineraryPaper.append("<p><strong>Travel Name:</strong> ").append(itineraryDetails.get(0)).append("</p>");
         itineraryPaper.append("<p><strong>Date:</strong> ").append(itineraryDetails.get(1)).append("</p>");
+        itineraryPaper.append("<p><strong>Starting Point:</strong> ").append(itineraryDetails.get(2)).append("</p>");
+        itineraryPaper.append("<p><strong>ETD (Estimated Time of Departure):</strong> ").append(itineraryDetails.get(3)).append("</p>");
+        itineraryPaper.append("<p><strong>Destination Point:</strong> ").append(itineraryDetails.get(4)).append("</p>");
+        itineraryPaper.append("<p><strong>ETA (Estimated Time of Arrival):</strong> ").append(itineraryDetails.get(5)).append("</p>");
     
         for (int dayNumber : days) {
             itineraryPaper.append("<div class='day-container'>");
             itineraryPaper.append("<h2>Day ").append(dayNumber).append(":</h2>");
     
-            List<String> destinations = DatabaseHelper.getDestinationsByTravelAndDay(itineraryId, dayNumber);
+            List<String> destinations = DatabaseHelper.getDestinationsAndTimeByTravelAndDay(itineraryId, dayNumber);
             itineraryPaper.append("<ul>");
-            for (String destination : destinations) {
-                itineraryPaper.append("<li>").append(destination).append("</li>");
+            for (int i = 0; i < destinations.size(); i+=2) {
+                itineraryPaper.append("<li>").append(destinations.get(i)).append(" - ").append(destinations.get(i+1)).append("</li>");
             }
             itineraryPaper.append("</ul>");
             itineraryPaper.append("</div>"); 
         }
-    
+        itineraryPaper.append("</div>");
         itineraryPaper.append("</body></html>");
         return itineraryPaper.toString();
     }
     
     public static void main(String[] args) throws SQLException {
-        String Html = DatabaseHelper.generateItineraryPaper(5);
+        String Html = DatabaseHelper.generateItineraryPaper(1);
         System.out.println(Html);
 
-        try (PrintWriter writer = new PrintWriter("itinerary.html", "UTF-8")) { // Create the HTML file
+        try (PrintWriter writer = new PrintWriter("Maven_ParDis/itinerary.html", "UTF-8")) {
             writer.print(Html);
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
