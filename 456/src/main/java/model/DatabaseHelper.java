@@ -1,5 +1,8 @@
 package model;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +174,7 @@ public class DatabaseHelper {
                     itineraryDetails.add(rs.getString("etd"));
                     itineraryDetails.add(rs.getString("destination"));
                     itineraryDetails.add(rs.getString("eta"));
+                    itineraryDetails.add(rs.getString("username"));
                 }
             }
         }
@@ -463,11 +467,85 @@ public class DatabaseHelper {
             pstmt.executeUpdate();
         }
     }
-    public static void main(String[] args) {
-        String fullPath = "Maven_ParDis/456/src/main/resources/travelPhotos/example.png";
-        int index = fullPath.lastIndexOf("resources") + "resources".length(); // Find the index after "resources/"
-        String relativePath = fullPath.substring(index); // Extract the substring after "resources/"
+    public static List<Integer> getDaysByTravelName(int itineraryId) throws SQLException {
+        List<Integer> daysList = new ArrayList<>();
+        String sql = "SELECT day_number FROM days WHERE itinerary_id = ?"; // Query by itinerary_id, not travel_name
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, itineraryId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    daysList.add(rs.getInt("day_number"));
+                }
+            }
+        }
+        return daysList;
+    }
 
-        System.out.println(relativePath);
+    public static List<String> getDestinationsByTravelAndDay(int itineraryId, int dayNumber) throws SQLException {
+        List<String> destinations = new ArrayList<>();
+        String sql = "SELECT p.destination " +
+                "FROM places p " +
+                "JOIN days d ON p.day_id = d.id " +
+                "WHERE d.day_number = ? AND d.itinerary_id = ?"; // Use itinerary_id directly
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, dayNumber);
+            pstmt.setInt(2, itineraryId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    destinations.add(rs.getString("destination"));
+                }
+            }
+        }
+        return destinations;
+    }
+
+    public static String generateItineraryPaper(int itineraryId) throws SQLException {
+        List<String> itineraryDetails = DatabaseHelper.getItineraryById(itineraryId);
+        List<Integer> days = DatabaseHelper.getDaysByTravelName(itineraryId);
+    
+        StringBuilder itineraryPaper = new StringBuilder();
+        itineraryPaper.append("<html><head>");
+        itineraryPaper.append("<style>");
+        itineraryPaper.append("body { font-family: sans-serif; margin: 20px; }");
+        itineraryPaper.append("h1 { color: #333; text-align: center; }");
+        itineraryPaper.append("h2 { color: #555; margin-top: 30px; }");
+        itineraryPaper.append(".day-container { border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-bottom: 20px; background-color: #f5f5f5; }");
+        itineraryPaper.append("ul { list-style: none; padding: 0; }");
+        itineraryPaper.append("li { margin-bottom: 10px; }");
+        itineraryPaper.append("</style>");
+        itineraryPaper.append("</head><body>");
+        itineraryPaper.append("<h1>").append(itineraryDetails.get(6)).append("'s Itinerary</h1>");
+        itineraryPaper.append("<p><strong>Travel Name:</strong> ").append(itineraryDetails.get(0)).append("</p>");
+        itineraryPaper.append("<p><strong>Date:</strong> ").append(itineraryDetails.get(1)).append("</p>");
+    
+        for (int dayNumber : days) {
+            itineraryPaper.append("<div class='day-container'>");
+            itineraryPaper.append("<h2>Day ").append(dayNumber).append(":</h2>");
+    
+            List<String> destinations = DatabaseHelper.getDestinationsByTravelAndDay(itineraryId, dayNumber);
+            itineraryPaper.append("<ul>");
+            for (String destination : destinations) {
+                itineraryPaper.append("<li>").append(destination).append("</li>");
+            }
+            itineraryPaper.append("</ul>");
+            itineraryPaper.append("</div>"); 
+        }
+    
+        itineraryPaper.append("</body></html>");
+        return itineraryPaper.toString();
+    }
+    
+    public static void main(String[] args) throws SQLException {
+        String Html = DatabaseHelper.generateItineraryPaper(5);
+        System.out.println(Html);
+
+        try (PrintWriter writer = new PrintWriter("itinerary.html", "UTF-8")) { // Create the HTML file
+            writer.print(Html);
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }
