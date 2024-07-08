@@ -46,34 +46,6 @@ public class DatabaseHelper {
         executeStatement(sql);
     }
 
-    public static boolean insertUser(String username, String email, String name, String password) {
-        String sql = "INSERT INTO users(username, email, name, password) VALUES(?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, email);
-            pstmt.setString(3, name);
-            pstmt.setString(4, password);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    public static boolean authenticateUser(String username, String password) throws SQLException {
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next();
-            }
-        }
-    }
-
     public static void createItineraryTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS itineraries (" +
                      "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -107,6 +79,35 @@ public class DatabaseHelper {
                      "photo TEXT, " +
                      "FOREIGN KEY(day_id) REFERENCES days(id))";
         executeStatement(sql);
+    }
+
+    public static boolean insertUser(String username, String email, String name, String password) {
+        String sql = "INSERT INTO users(username, email, name, password) VALUES(?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, email);
+            pstmt.setString(3, name);
+            pstmt.setString(4, password);
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static boolean authenticateUser(String username, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        }
     }
 
     public static int insertItinerary(Connection conn, String username, String travelName, String itineraryDate, String startingLocation, String etd, String destination, String eta) throws SQLException {
@@ -595,8 +596,7 @@ public class DatabaseHelper {
         itineraryPaper.append("</div>");
         itineraryPaper.append("</body></html>");
 
-        EmailData emailData = new EmailData(itineraryPaper.toString(), emailReceiveString, itineraryId); // Create EmailData object
-
+        EmailData emailData = new EmailData(itineraryPaper.toString(), emailReceiveString, itineraryId);
         Thread emailThread = new Thread(() -> {
             try {
                 SentToEMail(emailData);
