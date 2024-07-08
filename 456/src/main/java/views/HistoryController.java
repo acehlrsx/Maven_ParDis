@@ -146,7 +146,6 @@ public class HistoryController {
                                                             String photoString = DatabaseHelper.getPhotoPath(loggedInUsername, placesPerDay.get(i), day, itineraryId);
 
                                                             photoString = photoString.replaceAll("\\\\", "/");
-                                                            System.err.println(photoString);
                                                             int index = photoString.lastIndexOf("resources") + "resources".length();
                                                             String relativePath = photoString.substring(index);
 

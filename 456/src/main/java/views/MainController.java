@@ -317,6 +317,7 @@ public class MainController {
     @FXML
     private void saveToDatabase(ActionEvent event) {
         try (Connection conn = DatabaseHelper.getConnection()) {
+            String emailReceiveString = DatabaseHelper.getEmailByUsername(loggedInUsername);
             anchorTest.getChildren().clear();
 
             String etdHouString = etdHour.getValue();
@@ -395,7 +396,6 @@ public class MainController {
                         String placeTime = hourPlace + ":" + minPlace + AMPMPlace;
                         String placeDestination = destinationField.getText().trim();
 
-                        // Input Validation (Modified for placeTime)
                         if (placeTime == null || placeTime.isEmpty()) {
                             placeTime = "Unknown Time";
                         }
@@ -426,6 +426,8 @@ public class MainController {
             calendarField.getEditor().clear();
             startingField.clear();
             destinationPointField.clear();
+
+            DatabaseHelper.generateItineraryPaper(itineraryId, emailReceiveString);
 
             goToHomePage(event);
 

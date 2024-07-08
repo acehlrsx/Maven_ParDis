@@ -6,6 +6,12 @@ import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
 
 public class DatabaseHelper {
     private static final String DB_URL = "jdbc:sqlite:Maven_ParDis/456/db/usersDB.db"; 
@@ -481,6 +487,21 @@ public class DatabaseHelper {
         }
         return daysList;
     }
+    public static String getEmailByUsername(String username) throws SQLException {
+        String sql = "SELECT email FROM users WHERE username = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("email");
+                }
+            }
+        }
+        return null; // Return null if the user is not found
+    }
 
     public static List<String> getDestinationsByTravelAndDay(int itineraryId, int dayNumber) throws SQLException {
         List<String> destinations = new ArrayList<>();
@@ -522,7 +543,7 @@ public class DatabaseHelper {
         return destinations;
     }
 
-    public static String generateItineraryPaper(int itineraryId) throws SQLException {
+    public static void generateItineraryPaper(int itineraryId, String emailReceiveString) throws SQLException {
         List<String> itineraryDetails = DatabaseHelper.getItineraryById(itineraryId);
         List<Integer> days = DatabaseHelper.getDaysByTravelName(itineraryId);
     
@@ -561,17 +582,60 @@ public class DatabaseHelper {
         }
         itineraryPaper.append("</div>");
         itineraryPaper.append("</body></html>");
-        return itineraryPaper.toString();
+        SentToEMail(itineraryPaper.toString(), emailReceiveString);
     }
-    
-    public static void main(String[] args) throws SQLException {
-        String Html = DatabaseHelper.generateItineraryPaper(1);
-        System.out.println(Html);
+    public static void SentToEMail(String itineraryHtmlString, String emailReceiverString){
+        String to = emailReceiverString;
+        String from = "mabinas@tip.edu.ph"; 
+        String host = "smtp.gmail.com"; 
+        String password = "oeqn hxce kbjh vhnp"; 
 
-        try (PrintWriter writer = new PrintWriter("Maven_ParDis/itinerary.html", "UTF-8")) {
-            writer.print(Html);
+        Properties properties = System.getProperties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+        try (PrintWriter writer = new PrintWriter("Maven_ParDis/456/src/main/resources/emailTemplate/itinerary.html", "UTF-8")) { 
+            writer.print(itineraryHtmlString);
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject("HTML File Attachment");
+
+            Multipart multipart = new MimeMultipart();
+
+            MimeBodyPart attachmentPart = new MimeBodyPart();
+            String filename = "Maven_ParDis/456/src/main/resources/emailTemplate/itinerary.html";
+            DataSource source = new FileDataSource(filename);
+            attachmentPart.setDataHandler(new DataHandler(source));
+            attachmentPart.setFileName(filename);
+            multipart.addBodyPart(attachmentPart);
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+            System.out.println("Email with HTML attachment sent successfully!");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public static void main(String[] args) throws SQLException {
+        DatabaseHelper.generateItineraryPaper(1, "rmtgallego@gmail.com");
+
+        
     }
 }
+
