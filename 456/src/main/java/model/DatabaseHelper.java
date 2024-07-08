@@ -12,11 +12,24 @@ import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+class EmailData {
+    String itineraryHtmlString;
+    int itineraryId;
+    String emailReceiveString;
+
+    public EmailData(String itineraryHtmlString, String emailReceiveString, int itineraryId) {
+        this.itineraryHtmlString = itineraryHtmlString;
+        this.emailReceiveString = emailReceiveString;
+        this.itineraryId = itineraryId;
+    }
+}
 public class DatabaseHelper {
     private static final String DB_URL = "jdbc:sqlite:Maven_ParDis/456/db/usersDB.db"; 
 
-    // Helper method to execute statements without results
     private static void executeStatement(String sql) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
@@ -390,8 +403,6 @@ public class DatabaseHelper {
     }
     
     
-    
-    
     public static int getItineraryIdByTravelName(String username, String travelName) throws SQLException {
         String sql = "SELECT id FROM itineraries WHERE travel_name = ? AND username = ?"; // Added username check
     
@@ -405,13 +416,12 @@ public class DatabaseHelper {
                 if (rs.next()) {
                     return rs.getInt("id");
                 } else {
-                    // Throw an exception if no itinerary is found for this user and travel name
                     throw new SQLException("No itinerary found with travel name '" + travelName + "' for user '" + username + "'.");
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error getting itinerary ID: " + e.getMessage()); // Clearer error message
-            throw e; // Re-throw the exception for handling elsewhere
+            System.err.println("Error getting itinerary ID: " + e.getMessage()); 
+            throw e; 
         }
     }
     public static List<String> getDoneTravelNames(String username) {
@@ -454,7 +464,7 @@ public class DatabaseHelper {
                 if (rs.next()) {
                     return rs.getString("photo");
                 } else {
-                    return null; // Or throw an exception if you want to handle the case differently
+                    return null; 
                 }
             }
         }
@@ -500,7 +510,7 @@ public class DatabaseHelper {
                 }
             }
         }
-        return null; // Return null if the user is not found
+        return null; 
     }
 
     public static List<String> getDestinationsByTravelAndDay(int itineraryId, int dayNumber) throws SQLException {
@@ -546,7 +556,8 @@ public class DatabaseHelper {
     public static void generateItineraryPaper(int itineraryId, String emailReceiveString) throws SQLException {
         List<String> itineraryDetails = DatabaseHelper.getItineraryById(itineraryId);
         List<Integer> days = DatabaseHelper.getDaysByTravelName(itineraryId);
-    
+        
+            
         StringBuilder itineraryPaper = new StringBuilder();
         itineraryPaper.append("<html><head>");
         itineraryPaper.append("<style>");
@@ -567,11 +578,11 @@ public class DatabaseHelper {
         itineraryPaper.append("<p><strong>ETD (Estimated Time of Departure):</strong> ").append(itineraryDetails.get(3)).append("</p>");
         itineraryPaper.append("<p><strong>Destination Point:</strong> ").append(itineraryDetails.get(4)).append("</p>");
         itineraryPaper.append("<p><strong>ETA (Estimated Time of Arrival):</strong> ").append(itineraryDetails.get(5)).append("</p>");
-    
+
         for (int dayNumber : days) {
             itineraryPaper.append("<div class='day-container'>");
             itineraryPaper.append("<h2>Day ").append(dayNumber).append(":</h2>");
-    
+
             List<String> destinations = DatabaseHelper.getDestinationsAndTimeByTravelAndDay(itineraryId, dayNumber);
             itineraryPaper.append("<ul>");
             for (int i = 0; i < destinations.size(); i+=2) {
@@ -580,15 +591,31 @@ public class DatabaseHelper {
             itineraryPaper.append("</ul>");
             itineraryPaper.append("</div>"); 
         }
+
         itineraryPaper.append("</div>");
         itineraryPaper.append("</body></html>");
-        SentToEMail(itineraryPaper.toString(), emailReceiveString);
+
+        EmailData emailData = new EmailData(itineraryPaper.toString(), emailReceiveString, itineraryId); // Create EmailData object
+
+        Thread emailThread = new Thread(() -> {
+            try {
+                SentToEMail(emailData);
+            } catch (MessagingException | FileNotFoundException | UnsupportedEncodingException e) {
+                System.err.println("Error sending email for itinerary " + emailData.itineraryId + ": " + e.getMessage());
+            }
+        });
+        emailThread.start(); 
     }
-    public static void SentToEMail(String itineraryHtmlString, String emailReceiverString){
+    public static void SentToEMail(EmailData emailData) throws MessagingException, FileNotFoundException, UnsupportedEncodingException {
+
+        String itineraryHtmlString = emailData.itineraryHtmlString;
+        String emailReceiverString = emailData.emailReceiveString;
+        int itineraryId = emailData.itineraryId;
+
         String to = emailReceiverString;
-        String from = "mabinas@tip.edu.ph"; 
+        String from = "jrcabalo056@gmail.com"; 
         String host = "smtp.gmail.com"; 
-        String password = "oeqn hxce kbjh vhnp"; 
+        String password = "tskc fvyi vflo ldlm"; 
 
         Properties properties = System.getProperties();
         properties.put("mail.smtp.host", host);
@@ -610,9 +637,23 @@ public class DatabaseHelper {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            message.setSubject("HTML File Attachment");
+            message.setSubject("Your Journify Itinerary is Here!");
 
             Multipart multipart = new MimeMultipart();
+
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText("Please find your Journify itinerary attached.", "plain", "UTF-8");
+            multipart.addBodyPart(textPart);
+
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            String htmlContent = "<html><body style='font-family: sans-serif;'>" +
+                "<p>Dear Traveler,</p>" + 
+                "<p>Your exciting journey awaits! We've prepared a detailed itinerary for your trip:</p>" +
+                emailData.itineraryHtmlString + 
+                "<p>Best regards,<br>The Journify Team</p>" +
+                "</body></html>";
+            htmlPart.setContent(htmlContent, "text/html; charset=UTF-8");
+            multipart.addBodyPart(htmlPart);
 
             MimeBodyPart attachmentPart = new MimeBodyPart();
             String filename = "Maven_ParDis/456/src/main/resources/emailTemplate/itinerary.html";
@@ -627,15 +668,34 @@ public class DatabaseHelper {
             System.out.println("Email with HTML attachment sent successfully!");
 
         } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-    public static void main(String[] args) throws SQLException {
-        DatabaseHelper.generateItineraryPaper(1, "rmtgallego@gmail.com");
-
-        
+        System.err.println("Error sending email for itinerary " + itineraryId + ": " + e.getMessage());
+        throw e;
     }
 }
-
+    
+    public static void main(String[] args) throws SQLException {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        try {
+            executor.execute(() -> {
+                try {
+                    String email = DatabaseHelper.getEmailByUsername("Aadinnr"); 
+                    if (email != null) {
+                        generateItineraryPaper(1, email); 
+                    }
+                } catch (SQLException e) {
+                    System.err.println("Error processing itinerary " + ": " + e.getMessage());
+                }
+            });
+        } finally {
+            executor.shutdown(); 
+            try {
+                if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                    executor.shutdownNow(); 
+                }
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
